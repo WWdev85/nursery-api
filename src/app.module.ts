@@ -16,7 +16,7 @@ import { RoleEntity } from './role/dto/role.entity';
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
         type: 'mysql',
-        host: 'mysql48.mydevil.net',
+        host: configService.get('DB_HOST'),
         port: configService.get<number>('DB_PORT'),
         username: configService.get('DB_USERNAME'),
         password: configService.get('DB_PASSWORD'),
