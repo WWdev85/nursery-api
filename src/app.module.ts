@@ -10,7 +10,7 @@ import { RoleEntity } from './role/dto/role.entity';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      isGlobal: true, // Dzięki temu nie musisz importować ConfigModule w innych modułach
+      isGlobal: true,
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],

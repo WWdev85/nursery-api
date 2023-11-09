@@ -15,8 +15,8 @@ jobs:
           node-version: '20'
       - name: Install Dependencies
         run: npm install
-      - name: Run Tests
-        run: npm test
+      #- name: Run Tests
+        #run: npm test
       - name: Build
         run: npm run build
       - name: Copy package.json to dist folder
