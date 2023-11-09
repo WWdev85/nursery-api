@@ -8,6 +8,7 @@ import { RoleEntity } from './dto/role.entity';
 
 @Injectable()
 export class RoleService {
+    [x: string]: any;
 
     /**
      * Create staff member.
