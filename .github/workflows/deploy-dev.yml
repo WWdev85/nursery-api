@@ -3,7 +3,7 @@ name: Deploy to Hosting on Push
 on:
   push:
     branches:
-      - develop
+      - staff_module
 jobs:
   deploy:
     runs-on: ubuntu-latest
