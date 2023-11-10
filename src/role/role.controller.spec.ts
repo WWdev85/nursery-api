@@ -1,12 +1,26 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { RoleController } from './role.controller';
 import { RoleService } from './role.service';
-import { CreateRoleDto } from './dto/role.dto';
-import { RoleType } from '../../types';
+import { CreateRoleDto, RoleDto } from './dto/role.dto';
+import { CreateRoleResponse, DeleteRoleResponse, GetRolesListResponse, Order, Role, RoleType, UpdateRoleResponse } from '../../types';
+import { HttpException, HttpStatus } from '@nestjs/common';
+import { ListQueryDto } from '../dtos';
 
 describe('RoleController', () => {
-  let roleController: RoleController;
+  let controller: RoleController;
   let roleService: RoleService;
+
+  const firstRole: Role = {
+    id: '1',
+    name: 'Teacher',
+    type: RoleType.Admin
+  }
+
+  const secondRole: Role = {
+    id: '2',
+    name: 'Assistant',
+    type: RoleType.Staff
+  }
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -15,28 +29,128 @@ describe('RoleController', () => {
         {
           provide: RoleService,
           useValue: {
-            create: jest.fn().mockResolvedValue('Role Created Successfully'),
+            addRole: jest.fn(),
+            updateRole: jest.fn(),
+            deleteRole: jest.fn(),
+            getRolesList: jest.fn(),
           },
         },
       ],
     }).compile();
 
-    roleController = module.get<RoleController>(RoleController);
+    controller = module.get<RoleController>(RoleController);
     roleService = module.get<RoleService>(RoleService);
   });
+
   it('should be defined', () => {
-    expect(roleController).toBeDefined();
+    expect(controller).toBeDefined();
   });
 
   describe('addRole', () => {
-    it('should create a new role and return "Role Created Successfully"', async () => {
+    it('should successfully create a role', async () => {
       const role: CreateRoleDto = {
-        roleName: 'sdasadasd',
-        roleType: RoleType.Admin
+        name: 'Teacher',
+        type: RoleType.Admin,
       };
+      jest.spyOn(roleService, 'addRole').mockResolvedValue(CreateRoleResponse.Success);
 
-      expect(await roleController.addRole(role)).toBe(' sadas');
-      //expect(roleService.addRole).toHaveBeenCalledWith(role);
+      expect(await controller.addRole(role)).toEqual(CreateRoleResponse.Success);
+    });
+
+    it('should handle duplicate role name addition', async () => {
+      const role: CreateRoleDto = {
+        name: 'Teacher',
+        type: RoleType.Admin,
+      };
+      jest.spyOn(roleService, 'addRole').mockRejectedValue(new HttpException(CreateRoleResponse.Duplicated, HttpStatus.CONFLICT));
+
+      await expect(controller.addRole(role)).rejects.toThrow(CreateRoleResponse.Duplicated);
+    });
+  });
+
+  describe('updateRole', () => {
+    it('should successfully update a role', async () => {
+      const role: RoleDto = {
+        id: '1',
+        name: 'Teacher',
+        type: RoleType.Admin,
+      };
+      jest.spyOn(roleService, 'updateRole').mockResolvedValue(UpdateRoleResponse.Success);
+
+      expect(await controller.updateRole(role)).toEqual(UpdateRoleResponse.Success);
+    });
+
+    it('should handle duplicate role name addition', async () => {
+      const role: RoleDto = {
+        id: '1',
+        name: 'Teacher',
+        type: RoleType.Admin,
+      };
+      jest.spyOn(roleService, 'addRole').mockRejectedValue(new HttpException(UpdateRoleResponse.Duplicated, HttpStatus.CONFLICT));
+
+      await expect(controller.addRole(role)).rejects.toThrow(UpdateRoleResponse.Duplicated);
+    });
+
+    it('should handle not existing role', async () => {
+      const role: RoleDto = {
+        id: '1',
+        name: 'Teacher',
+        type: RoleType.Admin,
+      };
+      jest.spyOn(roleService, 'addRole').mockRejectedValue(new HttpException(UpdateRoleResponse.NotFound, HttpStatus.NOT_FOUND));
+
+      await expect(controller.addRole(role)).rejects.toThrow(UpdateRoleResponse.NotFound);
+    });
+  });
+
+  describe('deleteRole', () => {
+    it('should successfully delete a role', async () => {
+      const roleId = '1';
+      jest.spyOn(roleService, 'deleteRole').mockResolvedValue(DeleteRoleResponse.Success);
+
+      await controller.deleteRole(roleId);
+      expect(roleService.deleteRole).toHaveBeenCalledWith(roleId);
+    });
+
+    it('should handle not existing role', async () => {
+      const roleId = '1';
+      jest.spyOn(roleService, 'deleteRole').mockRejectedValue(new HttpException(DeleteRoleResponse.NotFound, HttpStatus.NOT_FOUND));
+
+      await expect(controller.deleteRole(roleId)).rejects.toThrow(DeleteRoleResponse.NotFound);
+    });
+
+
+  });
+
+  describe('getRolesList', () => {
+    it('should successfully retrieve the roles list', async () => {
+
+      const query: ListQueryDto = {
+        page: 1,
+        limit: 2,
+        search: '',
+        orderBy: 'name',
+        order: Order.Asc
+      };
+      jest.spyOn(roleService, 'getRolesList').mockResolvedValue({
+        page: 1,
+        totalPages: 1,
+        totalItems: 2,
+        items: [
+          firstRole,
+          secondRole,
+        ]
+      });
+
+      expect(await controller.getRolesList(query)).toEqual({
+        page: 1,
+        totalPages: 1,
+        totalItems: 2,
+        items: [
+          firstRole,
+          secondRole,
+        ]
+      });
     });
   });
 });

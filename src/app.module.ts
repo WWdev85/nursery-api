@@ -5,7 +5,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { StaffModule } from './staff/staff.module';
 import { RoleModule } from './role/role.module';
-import { RoleEntity } from './role/dto/role.entity';
+import { RoleEntity } from './role/role.entity';
 
 @Module({
   imports: [
@@ -21,8 +21,8 @@ import { RoleEntity } from './role/dto/role.entity';
         username: configService.get('DB_USERNAME'),
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_DATABASE'),
-        //entities: [__dirname + '/**/*.entity{.ts,.js}'],
-        entities: [RoleEntity],
+        entities: [__dirname + '/**/*.entity{.ts,.js}'],
+        //entities: [RoleEntity],
         synchronize: true,
       }),
       inject: [ConfigService],
