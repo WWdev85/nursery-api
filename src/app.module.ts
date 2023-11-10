@@ -5,13 +5,12 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { StaffModule } from './staff/staff.module';
 import { RoleModule } from './role/role.module';
-import { RoleEntity } from './role/dto/role.entity';
+import { RoleEntity } from './role/role.entity';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: './.env',
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
