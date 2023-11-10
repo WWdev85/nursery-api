@@ -1,0 +1,49 @@
+name: Deploy to Hosting on Push
+
+on:
+  push:
+    branches:
+      - develop
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: '20'
+      - name: Install Dependencies
+        run: npm install
+      - name: Run Tests
+        run: npm test
+      - name: Build
+        run: npm run build
+      - name: Copy package.json to dist folder
+        run: cp package.json dist/src/
+      - name: Copy tsconfig.json to dist folder
+        run: cp tsconfig.json dist/src/
+      - name: List output files
+        run: ls ./dist
+      - name: FTPS Deploy
+        uses: SamKirkland/FTP-Deploy-Action@4.3.0
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          local-dir: dist/
+          server-dir: /public_nodejs/dist/
+          dry-run: false
+          dangerous-clean-slate: false
+
+      - name: SSH into Server and Run npm install
+        uses: appleboy/ssh-action@v0.1.4
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          script: |
+            cd ${{ secrets.DEPLOY_PATH }}
+            npm install
