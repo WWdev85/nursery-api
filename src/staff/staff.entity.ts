@@ -1,6 +1,6 @@
 import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Staff } from '../../types'
-import { RoleEntity } from "src/role/role.entity";
+import { RoleEntity } from "../role/role.entity";
 
 
 @Entity('staff')

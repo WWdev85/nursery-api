@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { RoleController } from './role.controller';
 import { RoleService } from './role.service';
 import { CreateRoleDto, RoleDto } from './dto/role.dto';
-import { CreateRoleResponse, DeleteRoleResponse, GetRolesListResponse, Order, Role, RoleType, UpdateRoleResponse } from '../../types';
+import { CreateRoleResponse, DeleteRoleResponse, Order, Role, UpdateRoleResponse } from '../../types';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { ListQueryDto } from '../dtos';
 
@@ -13,13 +13,11 @@ describe('RoleController', () => {
   const firstRole: Role = {
     id: '1',
     name: 'Teacher',
-    type: RoleType.Admin
   }
 
   const secondRole: Role = {
     id: '2',
     name: 'Assistant',
-    type: RoleType.Staff
   }
 
   beforeEach(async () => {
@@ -50,7 +48,6 @@ describe('RoleController', () => {
     it('should successfully create a role', async () => {
       const role: CreateRoleDto = {
         name: 'Teacher',
-        type: RoleType.Admin,
       };
       jest.spyOn(roleService, 'addRole').mockResolvedValue(CreateRoleResponse.Success);
 
@@ -60,7 +57,6 @@ describe('RoleController', () => {
     it('should handle duplicate role name addition', async () => {
       const role: CreateRoleDto = {
         name: 'Teacher',
-        type: RoleType.Admin,
       };
       jest.spyOn(roleService, 'addRole').mockRejectedValue(new HttpException(CreateRoleResponse.Duplicated, HttpStatus.CONFLICT));
 
@@ -73,7 +69,6 @@ describe('RoleController', () => {
       const role: RoleDto = {
         id: '1',
         name: 'Teacher',
-        type: RoleType.Admin,
       };
       jest.spyOn(roleService, 'updateRole').mockResolvedValue(UpdateRoleResponse.Success);
 
@@ -84,7 +79,6 @@ describe('RoleController', () => {
       const role: RoleDto = {
         id: '1',
         name: 'Teacher',
-        type: RoleType.Admin,
       };
       jest.spyOn(roleService, 'addRole').mockRejectedValue(new HttpException(UpdateRoleResponse.Duplicated, HttpStatus.CONFLICT));
 
@@ -95,7 +89,6 @@ describe('RoleController', () => {
       const role: RoleDto = {
         id: '1',
         name: 'Teacher',
-        type: RoleType.Admin,
       };
       jest.spyOn(roleService, 'addRole').mockRejectedValue(new HttpException(UpdateRoleResponse.NotFound, HttpStatus.NOT_FOUND));
 

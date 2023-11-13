@@ -1,13 +1,7 @@
 import { PaginatedList } from 'types';
 
-export enum RoleType {
-    Admin = 'admin',
-    Staff = 'staff',
-};
-
 export interface CreateRole {
     name: string,
-    type: RoleType,
 };
 
 export interface Role extends CreateRole {
