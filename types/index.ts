@@ -1,2 +1,5 @@
+export * from './address'
+export * from './files'
 export * from './list'
 export * from './role'
+export * from './staff'
