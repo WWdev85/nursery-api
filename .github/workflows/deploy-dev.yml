@@ -47,3 +47,4 @@ jobs:
           script: |
             cd ${{ secrets.DEPLOY_PATH }}
             npm install
+            devil www restart ${{ secrets.DOMAIN_NAME }}
