@@ -1,8 +1,9 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, Unique } from "typeorm";
+import { BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, Unique } from "typeorm";
 
 import * as Api from '../../types'
+import { StaffEntity } from "../staff/staff.entity";
 
-@Entity('Role')
+@Entity('role')
 export class RoleEntity extends BaseEntity implements Api.Role {
 
     @PrimaryGeneratedColumn('uuid')
@@ -14,15 +15,12 @@ export class RoleEntity extends BaseEntity implements Api.Role {
     })
     public name: string;
 
-    @Column({
-        length: 20,
-    })
-    public type: Api.RoleType;
+    @OneToMany(() => StaffEntity, staff => staff.id)
+    user: StaffEntity[];
 
     constructor(role?: Api.Role) {
         super();
         this.id = role?.id;
         this.name = role?.name;
-        this.type = role?.type;
     }
 }
