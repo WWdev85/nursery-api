@@ -16,12 +16,12 @@ export enum CreateRoleResponse {
 export enum UpdateRoleResponse {
     Success = 'Role has been updated.',
     Duplicated = 'Role name already exists.',
-    NotFound = 'Not found.',
+    NotFound = 'Role not found.',
 }
 
 export enum DeleteRoleResponse {
     Success = 'Role has been deleted.',
-    NotFound = 'Not found.',
+    NotFound = 'Role notot found.',
 }
 
 export type GetRolesListResponse = PaginatedList<Role>

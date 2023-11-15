@@ -1,16 +1,16 @@
 import { IsString, IsArray } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
 import { ListDto } from "../../dtos";
-import * as Api from '../../../types';
+import { CreateRole, Role } from '../../../types';
 
 
-export class CreateRoleDto implements Api.CreateRole {
+export class CreateRoleDto implements CreateRole {
     @IsString()
     @ApiProperty()
     readonly name: string;
 }
 
-export class RoleDto extends CreateRoleDto implements Api.Role {
+export class RoleDto extends CreateRoleDto implements Role {
     @IsString()
     @ApiProperty()
     readonly id: string;

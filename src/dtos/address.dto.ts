@@ -1,23 +1,28 @@
-import * as Api from '../../types';
-import { IsString } from "class-validator";
-import { ApiProperty } from "@nestjs/swagger";
 
-export class Address implements Api.Address {
+import { IsString, Matches } from "class-validator";
+import { ApiProperty } from "@nestjs/swagger";
+import { Address, RegexPattern } from '../../types';
+
+export class AddressDto implements Address {
 
     @IsString()
-    @ApiProperty()
+    @Matches(new RegExp(RegexPattern.HouseNumber))
+    @ApiProperty({ default: 14 })
     readonly houseNumber: string;
 
     @IsString()
-    @ApiProperty()
+    @Matches(new RegExp(RegexPattern.UniversalPostalCode))
+    @ApiProperty({ default: "22-587" })
     readonly postalCode: string;
 
     @IsString()
-    @ApiProperty()
+    @Matches(new RegExp(RegexPattern.Minimum2Characters))
+    @ApiProperty({ default: "Warszawska" })
     readonly street: string;
 
     @IsString()
-    @ApiProperty()
+    @Matches(new RegExp(RegexPattern.Minimum2Characters))
+    @ApiProperty({ default: "Kraków" })
     readonly town: string;
 
 }

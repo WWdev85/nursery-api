@@ -24,7 +24,7 @@ export class StaffEntity extends BaseEntity implements Staff {
     public address: string;
 
     @Column({
-        length: 20,
+        length: 50,
         unique: true,
     })
     public email: string;
@@ -48,7 +48,8 @@ export class StaffEntity extends BaseEntity implements Staff {
     })
     public photoFn: string;
 
-    @ManyToOne(() => RoleEntity, role => role.id)
+    @ManyToOne(() => RoleEntity, role => role.id, { nullable: false })
+    @JoinColumn()
     public role: RoleEntity;
 
     constructor(staff?: Staff) {
