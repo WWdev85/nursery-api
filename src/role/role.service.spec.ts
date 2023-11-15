@@ -2,7 +2,7 @@ import { HttpException, HttpStatus } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { RoleService } from './role.service';
 import { RoleEntity } from './role.entity';
-import { CreateRoleResponse, DeleteRoleResponse, Order, RoleType, UpdateRoleResponse } from '../../types';
+import { CreateRoleResponse, DeleteRoleResponse, Order, UpdateRoleResponse } from '../../types';
 import { CreateRoleDto, RoleDto } from './dto/role.dto';
 import { ListQueryDto } from '../dtos';
 
@@ -24,7 +24,6 @@ describe('RolesService', () => {
 
       const role: CreateRoleDto = {
         name: 'NewRole',
-        type: RoleType.Admin,
       };
       await expect(service.addRole(role)).resolves.toBe(CreateRoleResponse.Success);
     });
@@ -34,7 +33,6 @@ describe('RolesService', () => {
 
       const role: CreateRoleDto = {
         name: 'NewRole',
-        type: RoleType.Admin,
       };
       await expect(service.addRole(role)).rejects.toThrow(new HttpException(CreateRoleResponse.Duplicated, HttpStatus.CONFLICT));
     });
@@ -47,7 +45,6 @@ describe('RolesService', () => {
 
       const role: CreateRoleDto = {
         name: 'NewRole',
-        type: RoleType.Admin,
       };
       await expect(service.addRole(role)).rejects.toThrow();
     });
@@ -57,7 +54,6 @@ describe('RolesService', () => {
     const role: RoleDto = {
       id: '1',
       name: 'UpdatedRole',
-      type: RoleType.Staff
     }
     it('should return success when a role is successfully updated', async () => {
       jest.spyOn(service, 'findRole').mockResolvedValue(new RoleEntity());
@@ -124,8 +120,8 @@ describe('RolesService', () => {
         skip: jest.fn().mockReturnThis(),
         take: jest.fn().mockReturnThis(),
         getManyAndCount: jest.fn().mockResolvedValue([[
-          { id: '1', name: 'Admin', type: RoleType.Admin },
-          { id: '2', name: 'User', type: RoleType.Staff }
+          { id: '1', name: 'Admin' },
+          { id: '2', name: 'User' }
         ], 100]),
       };
       jest.spyOn(RoleEntity, 'createQueryBuilder').mockReturnValue(queryBuilder as any);
