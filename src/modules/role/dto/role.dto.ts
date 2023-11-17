@@ -1,7 +1,7 @@
 import { IsString, IsArray } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
-import { ListDto } from "../../dtos";
-import { CreateRole, Role } from '../../../types';
+import { ListDto } from "../../../dtos";
+import { CreateRole, Role } from '../../../../types';
 
 
 export class CreateRoleDto implements CreateRole {

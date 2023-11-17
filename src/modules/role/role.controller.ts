@@ -2,8 +2,8 @@ import { Controller, Inject, Post, Patch, Get, Delete, Body, HttpCode, Query, Pa
 import { ApiTags, ApiOperation, ApiCreatedResponse, ApiOkResponse, ApiNotFoundResponse, ApiNoContentResponse } from '@nestjs/swagger';
 import { RoleService } from './role.service';
 import { CreateRoleDto, RoleDto, RolesListDto } from './dto/role.dto';
-import { CreateRoleResponse, UpdateRoleResponse, GetRolesListResponse, DeleteRoleResponse } from '../../types';
-import { ListQueryDto } from '../dtos';
+import { CreateRoleResponse, UpdateRoleResponse, GetRolesListResponse, DeleteRoleResponse } from '../../../types';
+import { ListQueryDto } from '../../dtos';
 
 /**
  * Role mamagment.

@@ -1,8 +1,8 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { IsArray, IsBoolean, IsEmail, IsJSON, IsObject, IsOptional, IsString, Matches } from "class-validator";
-import { CreateStaff, RegexPattern, Staff, UpdateStaff } from '../../../types';
-import { AddressDto, ListDto } from "../../dtos";
-import { RoleEntity } from "src/role/role.entity";
+import { CreateStaff, RegexPattern, Staff, UpdateStaff } from '../../../../types';
+import { AddressDto, ListDto } from "../../../dtos";
+import { RoleEntity } from "../../role/role.entity";
 import { RoleDto } from "../..//role/dto/role.dto";
 
 export class CreateSaffWithoutFileDto implements CreateStaff {

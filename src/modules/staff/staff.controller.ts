@@ -2,11 +2,11 @@ import { Controller, Inject, HttpCode, Body, Get, Post, Patch, UploadedFiles, Us
 import { ApiTags, ApiOperation, ApiCreatedResponse, ApiConsumes, ApiOkResponse, ApiNotFoundResponse, ApiNoContentResponse } from '@nestjs/swagger';
 import { FileFieldsInterceptor } from "@nestjs/platform-express";
 import * as path from "path";
-import { multerStorage, storageDir } from "../utils";
+import { multerStorage, storageDir } from "../../utils";
 import { StaffService } from './staff.service';
 import { CreateStaffDto, StaffDto, StaffListDto, UpdateStaffDto } from './dto/staff.dto';
-import { GetOneStaffResponse, GetPaginatedListOfStaff, MulterDiskUploadedFiles } from './../../types';
-import { ListQueryDto } from '../dtos';
+import { GetOneStaffResponse, GetPaginatedListOfStaff, MulterDiskUploadedFiles } from './../../../types';
+import { ListQueryDto } from '../../dtos';
 
 /**
  * Staff mamagment.
