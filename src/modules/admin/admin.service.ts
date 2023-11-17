@@ -1,9 +1,10 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { CreateAdminDto } from './dto/admin.dto';
 import { StaffEntity } from '../staff/staff.entity';
 import { AdminEntity } from './admin.entity';
 import { hashPwd } from '../../utils';
-import { Admin, CreateAdminResponse } from '../../../types';
+import { Admin, CreateAdminResponse, SendCodeResponse } from '../../../types';
+import { MailService } from '../mail/mail.service';
 
 @Injectable()
 
@@ -13,6 +14,10 @@ import { Admin, CreateAdminResponse } from '../../../types';
 
 export class AdminService {
 
+    constructor(
+        @Inject(MailService) private mailService: MailService,
+    ) {
+    }
     /**
     * Create administrator.
     */
@@ -37,5 +42,32 @@ export class AdminService {
         } catch (error) {
             throw error
         }
+    }
+
+    /**
+     * Send code
+     */
+
+    async sendCode(email: string): Promise<string> {
+        const code = this.generateFourDigitCode()
+        const admin = await AdminEntity.findOne({
+            where: {
+                email: email
+            }
+        })
+        if (admin) {
+            await this.mailService.sendMail("wasekw@gmail.com", "Kod", `${code}`)
+            await AdminEntity.update(admin.id, { currentTokenId: code })
+        }
+        return JSON.stringify(SendCodeResponse.Success)
+    }
+
+    /**
+     * Generate four digit code
+     */
+
+    generateFourDigitCode(): string {
+        const code = Math.floor(1000 + Math.random() * 9000);
+        return code.toString();
     }
 }

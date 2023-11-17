@@ -7,6 +7,8 @@ import { AuthModule } from './modules/auth/auth.module';
 import { StaffModule } from './modules/staff/staff.module';
 import { RoleModule } from './modules/role/role.module';
 import { AdminModule } from './modules/admin/admin.module';
+import { MailModule } from './modules/mail/mail.module';
+import { MailService } from './modules/mail/mail.service';
 
 @Module({
   imports: [
@@ -27,8 +29,8 @@ import { AdminModule } from './modules/admin/admin.module';
       }),
       inject: [ConfigService],
     }),
-    AuthModule, StaffModule, RoleModule, AdminModule],
+    AuthModule, StaffModule, RoleModule, AdminModule, MailModule],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, MailService],
 })
 export class AppModule { }

@@ -41,3 +41,4 @@ export enum ResetPasswordResponse {
     StaffNotFound = 'Staff mambember not exists',
     Failure = 'Password changing failed',
 }
+
