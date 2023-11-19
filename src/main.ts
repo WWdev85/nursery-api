@@ -1,9 +1,11 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import * as express from 'express';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { INestApplication, ValidationPipe } from "@nestjs/common";
+import * as cookieParser from 'cookie-parser';
+import { NestFactory } from '@nestjs/core';
+import { AppModule } from './app.module';
+
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -42,5 +44,8 @@ const appConfig = (app: INestApplication<any>) => {
         enableImplicitConversion: true,
       },
     }
+
   ));
+
+  app.use(cookieParser());
 }

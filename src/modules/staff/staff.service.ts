@@ -1,12 +1,12 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { CreateStaffResponse, DeleteStaffResponse, GetOneStaffResponse, GetPaginatedListOfStaff, MulterDiskUploadedFiles, Order, Staff, UpdateStaffResponse } from '../../types';
+import { CreateStaffResponse, DeleteStaffResponse, GetOneStaffResponse, GetPaginatedListOfStaff, MulterDiskUploadedFiles, Order, Staff, UpdateStaffResponse } from '../../../types';
 import * as path from 'path';
 import { unlink } from "node:fs/promises";
-import { storageDir } from "../utils";
+import { storageDir } from "../../utils";
 import { CreateStaffDto, UpdateStaffDto } from './dto/staff.dto';
 import { StaffEntity } from './staff.entity';
 import { RoleEntity } from '../role/role.entity';
-import { ListQueryDto } from '../dtos';
+import { ListQueryDto } from '../../dtos';
 
 
 @Injectable()
@@ -191,11 +191,9 @@ export class StaffService {
     */
 
     async getPhotoName(id: string): Promise<string | undefined> {
-        const staffMember = await StaffEntity.findOne({
-            where: {
-                id: id
-            }
-        })
+        const staffMember = await StaffEntity.createQueryBuilder('staff')
+            .where('staff.id = :id', { id: id })
+            .getOne();
         return staffMember?.photoFn
     }
 

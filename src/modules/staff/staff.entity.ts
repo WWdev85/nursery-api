@@ -1,6 +1,7 @@
 import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Staff } from '../../types'
+import { Staff } from '../../../types'
 import { RoleEntity } from "../role/role.entity";
+import { AdminEntity } from "../admin/admin.entity";
 
 
 @Entity('staff')
@@ -51,6 +52,9 @@ export class StaffEntity extends BaseEntity implements Staff {
     @ManyToOne(() => RoleEntity, role => role.id, { nullable: false })
     @JoinColumn()
     public role: RoleEntity;
+
+    @OneToOne(type => AdminEntity, { cascade: true })
+    public admin: AdminEntity
 
     constructor(staff?: Staff) {
         super();

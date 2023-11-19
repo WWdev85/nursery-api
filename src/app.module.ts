@@ -1,11 +1,14 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule, TypeOrmModuleOptions } from "@nestjs/typeorm";
+import { TypeOrmModule } from "@nestjs/typeorm";
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { StaffModule } from './staff/staff.module';
-import { RoleModule } from './role/role.module';
-import { RoleEntity } from './role/role.entity';
+import { AuthModule } from './modules/auth/auth.module';
+import { StaffModule } from './modules/staff/staff.module';
+import { RoleModule } from './modules/role/role.module';
+import { AdminModule } from './modules/admin/admin.module';
+import { MailModule } from './modules/mail/mail.module';
+import { MailService } from './modules/mail/mail.service';
 
 @Module({
   imports: [
@@ -22,13 +25,12 @@ import { RoleEntity } from './role/role.entity';
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_DATABASE'),
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
-        //entities: [RoleEntity],
         synchronize: true,
       }),
       inject: [ConfigService],
     }),
-    StaffModule, RoleModule],
+    AuthModule, StaffModule, RoleModule, AdminModule, MailModule],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, MailService],
 })
 export class AppModule { }

@@ -2,9 +2,9 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { RoleController } from './role.controller';
 import { RoleService } from './role.service';
 import { CreateRoleDto, RoleDto } from './dto/role.dto';
-import { CreateRoleResponse, DeleteRoleResponse, Order, Role, UpdateRoleResponse } from '../../types';
+import { CreateRoleResponse, DeleteRoleResponse, Order, Role, UpdateRoleResponse } from '../../../types';
 import { HttpException, HttpStatus } from '@nestjs/common';
-import { ListQueryDto } from '../dtos';
+import { ListQueryDto } from '../../dtos';
 
 describe('RoleController', () => {
   let controller: RoleController;

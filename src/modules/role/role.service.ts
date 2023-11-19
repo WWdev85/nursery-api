@@ -1,7 +1,7 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { CreateRoleDto, RoleDto } from './dto/role.dto';
 import { RoleEntity } from './role.entity';
-import { Role, CreateRoleResponse, UpdateRoleResponse, GetRolesListResponse, DeleteRoleResponse, Order } from '../../types';
+import { Role, CreateRoleResponse, UpdateRoleResponse, GetRolesListResponse, DeleteRoleResponse, Order } from '../../../types';
 import { ListQueryDto } from 'src/dtos';
 
 /**

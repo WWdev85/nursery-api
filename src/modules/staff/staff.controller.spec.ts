@@ -2,8 +2,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { StaffController } from './staff.controller';
 import { StaffService } from './staff.service';
 import { CreateStaffDto, UpdateStaffDto } from './dto/staff.dto';
-import { AddressDto } from '../dtos';
-import { CreateStaffResponse } from '../../types';
+import { AddressDto } from '../../dtos';
+import { CreateStaffResponse } from '../../../types';
 
 describe('StaffController', () => {
   let controller: StaffController;
