@@ -38,7 +38,7 @@ export class AdminDto extends CreateAdminDto implements Admin {
     readonly passwordHash: string;
 }
 
-export class AdminPayload {
+export class AdminPayloadDto {
     @IsString()
     @ApiProperty()
     readonly id: string;
@@ -53,8 +53,8 @@ export class AdminPayload {
 
 }
 
-export class AdminList extends ListDto<AdminPayload>{
+export class AdminListDto extends ListDto<AdminPayloadDto>{
     @IsArray()
-    @ApiProperty({ type: AdminPayload, isArray: true })
-    readonly items: AdminPayload[];
+    @ApiProperty({ type: AdminPayloadDto, isArray: true })
+    readonly items: AdminPayloadDto[];
 }

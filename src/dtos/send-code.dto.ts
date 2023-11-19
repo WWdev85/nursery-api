@@ -18,7 +18,7 @@ export class SendCodePayloadDto {
     readonly email: string
 }
 
-export class ResetPasswordPayload extends SendCodePayloadDto {
+export class ResetPasswordPayloadDto extends SendCodePayloadDto {
     @IsString()
     @ApiProperty()
     readonly code: string;

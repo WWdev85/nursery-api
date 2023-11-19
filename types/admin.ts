@@ -38,7 +38,17 @@ export enum SendCodeResponse {
 
 export enum ResetPasswordResponse {
     Success = 'Password has been changed',
-    StaffNotFound = 'Staff mambember not exists',
+    AdminNotFound = 'Administrator not exists',
     Failure = 'Password changing failed',
+}
+
+export enum UpdatePasswordResponse {
+    Success = 'Password has been changed',
+    Failure = 'Password changing failed',
+}
+
+export enum DeleteAdminResponse {
+    Success = 'Admin has been deleted.',
+    AdminNotFound = 'Administrator not exists.',
 }
 
