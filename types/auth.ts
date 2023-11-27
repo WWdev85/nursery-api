@@ -4,11 +4,11 @@ export interface Login {
 }
 
 export enum LoginResponse {
-    Success = 'Fuccessfully logged.',
+    Success = 'Successfully logged.',
     Failure = 'Log in failed.'
 }
 
 export enum LogoutResponse {
-    Success = 'Fuccessfully logged out.',
+    Success = 'Successfully logged out.',
     Failure = 'Log out failed.'
 }
