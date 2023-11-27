@@ -75,7 +75,7 @@ export class SettingsController {
      * Get application logo.
      */
 
-    @Get('logo/:id')
+    @Get('/get-logo')
     @ApiOperation({
         summary: 'Get application logo',
     })
