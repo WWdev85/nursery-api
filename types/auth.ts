@@ -5,7 +5,7 @@ export interface Login {
 
 export enum LoginResponse {
     Success = 'Fuccessfully logged.',
-    Failure = 'Log out failed.'
+    Failure = 'Log in failed.'
 }
 
 export enum LogoutResponse {

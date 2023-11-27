@@ -51,7 +51,7 @@ const appConfig = (app: INestApplication<any>) => {
   app.use(cookieParser());
 
   app.use(cors({
-    origin: ['http://localhost:3000', 'https://admin.webcarver20.usermd.net/'],
+    origin: ['http://localhost:3000', 'https://admin.webcarver20.usermd.net', 'https://api.webcarver20.usermd.net/'],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true
   }))
