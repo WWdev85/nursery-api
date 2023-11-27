@@ -116,8 +116,7 @@ export class StaffController {
     })
 
     async getOneStaffMember(@Param('id') id: string,): Promise<GetOneStaffResponse> {
-        const response = await this.staffService.getOneStaffMember(id)
-        return response
+        return await this.staffService.getOneStaffMember(id)
 
     }
 

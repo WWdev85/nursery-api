@@ -13,7 +13,10 @@ async function bootstrap() {
   appConfig(app)
   await app.listen(3000);
 }
-bootstrap();
+if (process.env.COOKIE_OPTION_DOMAIN === 'localhost') {
+  bootstrap();
+}
+
 
 export async function createNestServer(expressInstance: express.Express): Promise<any> {
   const app = await NestFactory.create(

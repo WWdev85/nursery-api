@@ -9,6 +9,7 @@ import { RoleModule } from './modules/role/role.module';
 import { AdminModule } from './modules/admin/admin.module';
 import { MailModule } from './modules/mail/mail.module';
 import { MailService } from './modules/mail/mail.service';
+import { SettingsModule } from './modules/settings/settings.module';
 
 @Module({
   imports: [
@@ -29,7 +30,7 @@ import { MailService } from './modules/mail/mail.service';
       }),
       inject: [ConfigService],
     }),
-    AuthModule, StaffModule, RoleModule, AdminModule, MailModule],
+    AuthModule, SettingsModule, StaffModule, RoleModule, AdminModule, MailModule],
   controllers: [AppController],
   providers: [AppService, MailService],
 })
