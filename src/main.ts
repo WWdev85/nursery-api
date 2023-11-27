@@ -5,6 +5,7 @@ import { INestApplication, ValidationPipe } from "@nestjs/common";
 import * as cookieParser from 'cookie-parser';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import * as cors from 'cors';
 
 
 async function bootstrap() {
@@ -48,4 +49,10 @@ const appConfig = (app: INestApplication<any>) => {
   ));
 
   app.use(cookieParser());
+
+  app.use(cors({
+    origin: ['http://localhost:3000', 'https://admin.webcarver20.usermd.net/'],
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true
+  }))
 }
