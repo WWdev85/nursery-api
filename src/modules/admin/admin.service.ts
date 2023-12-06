@@ -50,15 +50,21 @@ export class AdminService {
      */
 
     async sendCode(email: string): Promise<string> {
-        const code = this.generateFourDigitCode()
-        const admin = await AdminEntity.createQueryBuilder('admin')
-            .where('admin.email = :email', { email: email })
-            .getOne()
-        if (admin) {
-            await this.mailService.sendMail("wasekw@gmail.com", "Kod", `${code}`)
-            await AdminEntity.update(admin.id, { currentTokenId: code })
+        try {
+            const code = this.generateFourDigitCode()
+            const admin = await AdminEntity.createQueryBuilder('admin')
+                .where('admin.email = :email', { email: email })
+                .getOne()
+            if (admin) {
+                await this.mailService.sendMail(email, "Kod", `${code}`)
+                await AdminEntity.update(admin.id, { currentTokenId: code })
+                return JSON.stringify(SendCodeResponse.Success)
+            } else {
+                return JSON.stringify(SendCodeResponse.NotFound)
+            }
+        } catch (error) {
+            throw error
         }
-        return JSON.stringify(SendCodeResponse.Success)
     }
 
     /**

@@ -34,6 +34,7 @@ export type GetPaginatedListOfAdmins = PaginatedList<GetOneAdminResponse>
 
 export enum SendCodeResponse {
     Success = 'Code has been sent',
+    NotFound = 'Email not found',
 }
 
 export enum ResetPasswordResponse {
