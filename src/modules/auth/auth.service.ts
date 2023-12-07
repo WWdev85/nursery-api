@@ -27,6 +27,8 @@ export class AuthService {
         try {
             if (host.includes('localhost')) {
                 this.cookieOptions.domain = 'localhost';
+                this.cookieOptions.secure = false;
+                this.cookieOptions.sameSite = 'lax';
             }
             const admin = await AdminEntity.createQueryBuilder('admin')
                 .where('admin.email = :email', { email: req.email })
@@ -54,6 +56,8 @@ export class AuthService {
         try {
             if (host.includes('localhost')) {
                 this.cookieOptions.domain = 'localhost';
+                this.cookieOptions.secure = false;
+                this.cookieOptions.sameSite = 'lax';
             }
             user.currentTokenId = "";
             await user.save();
