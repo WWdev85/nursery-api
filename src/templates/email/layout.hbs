@@ -24,6 +24,13 @@
                         </td>
                     </tr>
                     {{/if}}
+                    {{#if (isEqual content 'create-pwd')}}
+                    <tr>
+                        <td>
+                            {{> create-pwd}}
+                        </td>
+                    </tr>
+                    {{/if}}
 
                     <!-- Logo -->
                     <tr>

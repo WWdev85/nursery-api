@@ -3,7 +3,7 @@ import { CreateAdminDto } from './dto/admin.dto';
 import { StaffEntity } from '../staff/staff.entity';
 import { AdminEntity } from './admin.entity';
 import { hashPwd } from '../../utils';
-import { Admin, CreateAdminResponse, DeleteAdminResponse, GetOneAdminResponse, GetPaginatedListOfAdmins, Order, ResetPasswordResponse, SendCodeResponse, UpdatePasswordResponse } from '../../../types';
+import { Admin, CreateAdminResponse, DeleteAdminResponse, EmailType, GetOneAdminResponse, GetPaginatedListOfAdmins, Order, ResetPasswordResponse, SendCodeResponse, UpdatePasswordResponse } from '../../../types';
 import { MailService } from '../mail/mail.service';
 import { ChangePwdDto, ListQueryDto, ResetPasswordPayloadDto } from '../../dtos';
 import { SettingsEntity } from '../settings/settings.entity';
@@ -37,6 +37,7 @@ export class AdminService {
                 newAdmin.staff = staffMember
                 newAdmin.email = staffMember.email
                 await newAdmin.save()
+                this.sendCode(staffMember.email, EmailType.CREATE_ADMIN)
                 return CreateAdminResponse.Success
             } else {
                 throw new HttpException(CreateAdminResponse.StaffNotFound, HttpStatus.NOT_FOUND);
@@ -50,7 +51,7 @@ export class AdminService {
      * Send code
      */
 
-    async sendCode(email: string): Promise<string> {
+    async sendCode(email: string, type: EmailType): Promise<string> {
         try {
             const code = this.generateSixDigitCode()
             const admin = await AdminEntity.createQueryBuilder('admin')
@@ -65,11 +66,12 @@ export class AdminService {
                     'Kod weryfikacyjny',
                     'layout',
                     {
-                        content: 'reset-pwd',
+                        content: type,
                         code: code,
                         appName: settings.appName,
                         url: `https://admin.${settings.appUrl}`,
-                        name: admin.staff.name
+                        name: admin.staff.name,
+                        adminId: admin.id
                     }
                 );
                 await AdminEntity.update(admin.id, { currentTokenId: code })
