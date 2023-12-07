@@ -99,11 +99,12 @@ export class SettingsService {
 
     filter(settings: SettingsEntity): GetSettingsResponse {
 
-        const { id, appName, firstColor, secondColor } = settings
+        const { id, appName, firstColor, secondColor, appUrl } = settings
         return {
             id: id,
             firstColor: firstColor,
             secondColor: secondColor,
+            appUrl: appUrl,
             appName: appName
         }
 

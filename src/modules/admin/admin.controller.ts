@@ -4,7 +4,7 @@ import { ApiTags, ApiOperation, ApiCreatedResponse, ApiOkResponse, ApiNotFoundRe
 import { AdminListDto, AdminPayloadDto, CreateAdminDto } from './dto/admin.dto';
 import { ChangePwdDto, ListQueryDto, ResetPasswordPayloadDto, SendCodePayloadDto } from '../../dtos';
 import { Protected, Requester } from '../../decorators';
-import { AdminRole, GetOneAdminResponse, GetPaginatedListOfAdmins } from '../../../types';
+import { AdminRole, EmailType, GetOneAdminResponse, GetPaginatedListOfAdmins } from '../../../types';
 import { AdminEntity } from './admin.entity';
 
 @ApiTags('admin')
@@ -46,7 +46,7 @@ export class AdminController {
     async sendCode(
         @Body() payload: SendCodePayloadDto,
     ): Promise<string> {
-        return this.adminService.sendCode(payload.email)
+        return this.adminService.sendCode(payload.email, EmailType.RESET_PWD)
     }
 
     /**

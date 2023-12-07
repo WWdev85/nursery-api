@@ -7,3 +7,4 @@ export * from './staff';
 export * from './admin';
 export * from './auth';
 export * from './settings';
+export * from './email';
