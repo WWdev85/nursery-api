@@ -63,7 +63,7 @@ export class AdminService {
                 const settings = response[0]
                 await this.mailService.sendMail(
                     email,
-                    'Kod weryfikacyjny',
+                    'Zmiana hasła',
                     'layout',
                     {
                         content: type,
