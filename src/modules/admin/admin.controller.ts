@@ -2,7 +2,7 @@ import { Controller, Inject, Post, HttpCode, Body, Patch, Delete, Get, Param, Qu
 import { AdminService } from './admin.service';
 import { ApiTags, ApiOperation, ApiCreatedResponse, ApiOkResponse, ApiNotFoundResponse, ApiNoContentResponse } from '@nestjs/swagger';
 import { AdminListDto, AdminPayloadDto, CreateAdminDto } from './dto/admin.dto';
-import { ChangePwdDto, ListQueryDto, ResetPasswordPayloadDto, SendCodePayloadDto } from '../../dtos';
+import { ChangePwdDto, ListQueryDto, ResetPasswordPayloadDto, SendCodePayloadDto, ValidateCodePayloadDto } from '../../dtos';
 import { Protected, Requester } from '../../decorators';
 import { AdminRole, EmailType, GetOneAdminResponse, GetPaginatedListOfAdmins } from '../../../types';
 import { AdminEntity } from './admin.entity';
@@ -41,12 +41,27 @@ export class AdminController {
     @Post('/send-code')
     @ApiOperation({
         summary: 'Send code',
-        description: 'Body interface: `string`',
+        description: 'Body interface: SendCodePayloadDto',
     })
     async sendCode(
         @Body() payload: SendCodePayloadDto,
     ): Promise<string> {
         return this.adminService.sendCode(payload.email, EmailType.RESET_PWD)
+    }
+
+    /**
+   * Validate code
+   */
+
+    @Post('/validate-code')
+    @ApiOperation({
+        summary: 'Validate code',
+        description: 'Body interface: ValidateCodePayloadDto',
+    })
+    async validateCode(
+        @Body() payload: ValidateCodePayloadDto,
+    ): Promise<string> {
+        return this.adminService.validateCode(payload)
     }
 
     /**

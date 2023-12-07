@@ -5,7 +5,7 @@ import { AdminEntity } from './admin.entity';
 import { hashPwd } from '../../utils';
 import { Admin, CreateAdminResponse, DeleteAdminResponse, EmailType, GetOneAdminResponse, GetPaginatedListOfAdmins, Order, ResetPasswordResponse, SendCodeResponse, UpdatePasswordResponse } from '../../../types';
 import { MailService } from '../mail/mail.service';
-import { ChangePwdDto, ListQueryDto, ResetPasswordPayloadDto } from '../../dtos';
+import { ChangePwdDto, ListQueryDto, ResetPasswordPayloadDto, ValidateCodePayloadDto } from '../../dtos';
 import { SettingsEntity } from '../settings/settings.entity';
 
 @Injectable()
@@ -85,16 +85,37 @@ export class AdminService {
     }
 
     /**
+    * Validate code
+    */
+
+    async validateCode(payload: ValidateCodePayloadDto): Promise<string> {
+        const { email, code } = payload
+        try {
+            const admin = await AdminEntity.createQueryBuilder('admin')
+                .where('admin.email = :email', { email: email })
+                .andWhere('admin.currentTokenId = :code', { code: code })
+                .getOne()
+            if (admin) {
+                return (admin.id)
+            } else {
+                return JSON.stringify('Invalid code')
+            }
+        } catch (error) {
+            throw error
+        }
+    }
+
+    /**
      * ResetPassword
      */
 
     async resetPassword(payload: ResetPasswordPayloadDto): Promise<string> {
-        const { email, password, code } = payload
-        const admin = await AdminEntity.createQueryBuilder('admin')
-            .where('admin.email = :email', { email: email })
-            .andWhere('admin.currentTokenId = :code', { code: code })
-            .getOne()
+        const { id, password, code } = payload
         try {
+            const admin = await AdminEntity.createQueryBuilder('admin')
+                .where('admin.id = :id', { id: id })
+                .andWhere('admin.currentTokenId = :code', { code: code })
+                .getOne()
             if (admin) {
                 await AdminEntity.update(admin.id, {
                     passwordHash: hashPwd(password),
