@@ -13,6 +13,8 @@ export class AuthService {
     /**
      * Login.
      */
+
+
     cookieOptions = {
         secure: process.env.COOKIE_OPTION_SECURE === 'true' ? true : false,
         domain: process.env.COOKIE_OPTION_DOMAIN,
@@ -20,9 +22,11 @@ export class AuthService {
 
     }
 
-    async login(req: AuthLogin, res: Response): Promise<any> {
+    async login(req: AuthLogin, res: Response, host: any): Promise<any> {
         try {
-            console.log(req)
+            if (host.includes('localhost')) {
+                this.cookieOptions.domain = 'localhost';
+            }
             const admin = await AdminEntity.createQueryBuilder('admin')
                 .where('admin.email = :email', { email: req.email })
                 .andWhere('admin.passwordHash = :password', { password: hashPwd(req.password) })
