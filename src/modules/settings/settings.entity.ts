@@ -24,6 +24,12 @@ export class SettingsEntity extends BaseEntity implements Settings {
     secondColor: string;
 
     @Column({
+        length: 200,
+        nullable: false,
+    })
+    appUrl: string
+
+    @Column({
         nullable: true,
     })
     logoFn: string;

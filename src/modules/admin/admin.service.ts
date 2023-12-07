@@ -6,6 +6,7 @@ import { hashPwd } from '../../utils';
 import { Admin, CreateAdminResponse, DeleteAdminResponse, GetOneAdminResponse, GetPaginatedListOfAdmins, Order, ResetPasswordResponse, SendCodeResponse, UpdatePasswordResponse } from '../../../types';
 import { MailService } from '../mail/mail.service';
 import { ChangePwdDto, ListQueryDto, ResetPasswordPayloadDto } from '../../dtos';
+import { SettingsEntity } from '../settings/settings.entity';
 
 @Injectable()
 
@@ -51,12 +52,26 @@ export class AdminService {
 
     async sendCode(email: string): Promise<string> {
         try {
-            const code = this.generateFourDigitCode()
+            const code = this.generateSixDigitCode()
             const admin = await AdminEntity.createQueryBuilder('admin')
+                .leftJoinAndSelect('admin.staff', 'staff')
                 .where('admin.email = :email', { email: email })
                 .getOne()
             if (admin) {
-                await this.mailService.sendMail(email, "Kod", `${code}`)
+                const response = await SettingsEntity.find()
+                const settings = response[0]
+                await this.mailService.sendMail(
+                    email,
+                    'Kod weryfikacyjny',
+                    'layout',
+                    {
+                        content: 'reset-pwd',
+                        code: code,
+                        appName: settings.appName,
+                        url: `https://admin.${settings.appUrl}`,
+                        name: admin.staff.name
+                    }
+                );
                 await AdminEntity.update(admin.id, { currentTokenId: code })
                 return JSON.stringify(SendCodeResponse.Success)
             } else {
@@ -202,8 +217,8 @@ export class AdminService {
      * Generate four digit code
      */
 
-    generateFourDigitCode(): string {
-        const code = Math.floor(1000 + Math.random() * 9000);
+    generateSixDigitCode(): string {
+        const code = Math.floor(100000 + Math.random() * 900000);
         return code.toString();
     }
 

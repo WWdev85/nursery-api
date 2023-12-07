@@ -2,6 +2,7 @@ export interface CreateSettings {
     appName: string;
     firstColor: string;
     secondColor: string;
+    appUrl: string;
     logo?: Express.Multer.File;
 };
 

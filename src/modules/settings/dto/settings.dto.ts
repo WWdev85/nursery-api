@@ -22,6 +22,10 @@ export class CreateSettingsDto implements CreateSettings {
     @ApiProperty()
     readonly secondColor: string;
 
+    @IsString()
+    @ApiProperty()
+    readonly appUrl: string;
+
     @ApiPropertyOptional({ type: 'string', format: 'binary', })
     @IsOptional()
     logo?: Express.Multer.File
