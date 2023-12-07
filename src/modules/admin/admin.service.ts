@@ -96,7 +96,7 @@ export class AdminService {
                 .andWhere('admin.currentTokenId = :code', { code: code })
                 .getOne()
             if (admin) {
-                return (admin.id)
+                return JSON.stringify(admin.id)
             }
         } catch (error) {
             throw error
