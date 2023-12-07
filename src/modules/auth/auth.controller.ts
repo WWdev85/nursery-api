@@ -40,11 +40,12 @@ export class AuthController {
     })
     @Protected([AdminRole.SuperAdmin, AdminRole.GroupAdmin])
     async logout(
+        @Req() host: Request,
         @Requester() admin: AdminEntity,
         @Res() res: Response
     ) {
         console.log(admin)
-        return this.authService.logout(admin, res)
+        return this.authService.logout(admin, res, host.get('host'))
     }
 
     /**
