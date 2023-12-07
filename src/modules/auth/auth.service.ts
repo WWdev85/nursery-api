@@ -19,6 +19,7 @@ export class AuthService {
         secure: process.env.COOKIE_OPTION_SECURE === 'true' ? true : false,
         domain: process.env.COOKIE_OPTION_DOMAIN,
         httpOnly: process.env.COOKIE_OPTION_HTTPONLY === 'true' ? true : false,
+        sameSite: 'none' as 'none' | 'lax' | 'strict',
 
     }
 
@@ -49,8 +50,11 @@ export class AuthService {
     * Logout.
     */
 
-    async logout(user: AdminEntity, res: Response) {
+    async logout(user: AdminEntity, res: Response, host: any) {
         try {
+            if (host.includes('localhost')) {
+                this.cookieOptions.domain = 'localhost';
+            }
             user.currentTokenId = "";
             await user.save();
             res.clearCookie(
@@ -67,7 +71,6 @@ export class AuthService {
     */
 
     async check(user: AdminEntity): Promise<string> {
-        console.log(this.cookieOptions)
         return JSON.stringify({ id: user.id, role: user.role })
     }
 
