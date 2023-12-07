@@ -97,8 +97,6 @@ export class AdminService {
                 .getOne()
             if (admin) {
                 return (admin.id)
-            } else {
-                return JSON.stringify('Invalid code')
             }
         } catch (error) {
             throw error
