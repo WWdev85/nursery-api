@@ -1,5 +1,5 @@
-import { Body, Controller, Get, Post, Res } from "@nestjs/common";
-import { Response } from "express";
+import { Body, Controller, Get, Post, Req, Res } from "@nestjs/common";
+import { Response, Request } from "express";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
 import { AdminRole } from "../../../types";
 import { AuthService } from "./auth.service";
@@ -23,10 +23,11 @@ export class AuthController {
         summary: 'Login',
     })
     async login(
+        @Req() host: Request,
         @Body() req: AuthLogin,
         @Res() res: Response
     ): Promise<any> {
-        return this.authService.login(req, res);
+        return this.authService.login(req, res, host.get('host'));
     }
 
     /**
