@@ -3,7 +3,7 @@ import { CreateAdminDto } from './dto/admin.dto';
 import { StaffEntity } from '../staff/staff.entity';
 import { AdminEntity } from './admin.entity';
 import { hashPwd } from '../../utils';
-import { Admin, CreateAdminResponse, DeleteAdminResponse, EmailType, GetOneAdminResponse, GetPaginatedListOfAdmins, Order, ResetPasswordResponse, SendCodeResponse, UpdatePasswordResponse } from '../../../types';
+import { Admin, CreateAdminResponse, DeleteAdminResponse, EmailType, GetOneAdminResponse, GetPaginatedListOfAdmins, Order, ResetPasswordResponse, SendCodeResponse, UpdatePasswordResponse, ValidateCodeResponse } from '../../../types';
 import { MailService } from '../mail/mail.service';
 import { ChangePwdDto, ListQueryDto, ResetPasswordPayloadDto, ValidateCodePayloadDto } from '../../dtos';
 import { SettingsEntity } from '../settings/settings.entity';
@@ -97,6 +97,8 @@ export class AdminService {
                 .getOne()
             if (admin) {
                 return JSON.stringify(admin.id)
+            } else {
+                return JSON.stringify(ValidateCodeResponse.Failure)
             }
         } catch (error) {
             throw error
