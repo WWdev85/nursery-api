@@ -37,6 +37,10 @@ export enum SendCodeResponse {
     NotFound = 'Email not found',
 }
 
+export enum ValidateCodeResponse {
+    Failure = 'Invalid code',
+}
+
 export enum ResetPasswordResponse {
     Success = 'Password has been changed',
     AdminNotFound = 'Administrator not exists',
