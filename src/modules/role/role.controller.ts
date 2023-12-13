@@ -2,8 +2,9 @@ import { Controller, Inject, Post, Patch, Get, Delete, Body, HttpCode, Query, Pa
 import { ApiTags, ApiOperation, ApiCreatedResponse, ApiOkResponse, ApiNotFoundResponse, ApiNoContentResponse } from '@nestjs/swagger';
 import { RoleService } from './role.service';
 import { CreateRoleDto, RoleDto, RolesListDto } from './dto/role.dto';
-import { CreateRoleResponse, UpdateRoleResponse, GetRolesListResponse, DeleteRoleResponse } from '../../../types';
+import { CreateRoleResponse, UpdateRoleResponse, GetRolesListResponse, DeleteRoleResponse, AdminRole } from '../../../types';
 import { ListQueryDto } from '../../dtos';
+import { Protected } from '../../decorators';
 
 /**
  * Role mamagment.
@@ -30,6 +31,7 @@ export class RoleController {
         description: CreateRoleResponse.Success,
     })
     @HttpCode(201)
+    @Protected([AdminRole.SuperAdmin])
     async addRole(
         @Body() role: CreateRoleDto
     ): Promise<CreateRoleResponse> {
@@ -51,7 +53,7 @@ export class RoleController {
     @ApiOkResponse({
         description: UpdateRoleResponse.Success,
     })
-
+    @Protected([AdminRole.SuperAdmin])
     async updateRole(
         @Body() role: RoleDto
     ): Promise<UpdateRoleResponse> {
@@ -73,6 +75,7 @@ export class RoleController {
         description: DeleteRoleResponse.Success,
     })
     @HttpCode(204)
+    @Protected([AdminRole.SuperAdmin])
     async deleteRole(@Param('id') id: string) {
         await this.roleService.deleteRole(id)
     }
@@ -90,6 +93,7 @@ export class RoleController {
         type: RolesListDto,
         description: 'Response interface: `GetRolesListResponse`',
     })
+    @Protected([AdminRole.SuperAdmin, AdminRole.GroupAdmin])
     async getRolesList(
         @Query() query: ListQueryDto
     ): Promise<GetRolesListResponse> {

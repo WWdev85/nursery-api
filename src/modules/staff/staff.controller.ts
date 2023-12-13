@@ -5,8 +5,9 @@ import * as path from "path";
 import { multerStorage, storageDir } from "../../utils";
 import { StaffService } from './staff.service';
 import { CreateStaffDto, StaffDto, StaffListDto, UpdateStaffDto } from './dto/staff.dto';
-import { GetOneStaffResponse, GetPaginatedListOfStaff, MulterDiskUploadedFiles } from './../../../types';
+import { AdminRole, GetOneStaffResponse, GetPaginatedListOfStaff, MulterDiskUploadedFiles } from './../../../types';
 import { ListQueryDto } from '../../dtos';
+import { Protected } from '../../decorators';
 
 /**
  * Staff mamagment.
@@ -44,6 +45,7 @@ export class StaffController {
         ], { storage: multerStorage(path.join(storageDir(), 'staff')) }
         )
     )
+    @Protected([AdminRole.SuperAdmin])
     async addStaff(
         @Body() staff: CreateStaffDto,
         @UploadedFiles() files: MulterDiskUploadedFiles,
@@ -72,6 +74,7 @@ export class StaffController {
         ], { storage: multerStorage(path.join(storageDir(), 'staff')) }
         )
     )
+    @Protected([AdminRole.SuperAdmin, AdminRole.GroupAdmin])
     async updateStaff(
         @Body() staff: UpdateStaffDto,
         @UploadedFiles() files: MulterDiskUploadedFiles,
@@ -94,7 +97,7 @@ export class StaffController {
         description: 'Staff member has been deleted',
     })
     @HttpCode(204)
-
+    @Protected([AdminRole.SuperAdmin])
     async deleteStaffMember(@Param('id') id: string,) {
         await this.staffService.deleteStaffMember(id)
     }
@@ -114,7 +117,7 @@ export class StaffController {
     @ApiNotFoundResponse({
         description: 'Staff member not found',
     })
-
+    @Protected([AdminRole.SuperAdmin, AdminRole.GroupAdmin])
     async getOneStaffMember(@Param('id') id: string,): Promise<GetOneStaffResponse> {
         return await this.staffService.getOneStaffMember(id)
 

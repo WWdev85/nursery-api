@@ -74,7 +74,6 @@ export class RoleService {
             if (search) {
                 queryBuilder
                     .where('role.name LIKE :search', { search: `%${search}%` })
-                    .orWhere('role.type LIKE :search', { search: `%${search}%` })
             }
             if (orderBy && order) {
                 queryBuilder.addOrderBy(`role.${orderBy}`, order.toUpperCase() as Order);

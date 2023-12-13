@@ -15,6 +15,12 @@ export class RoleEntity extends BaseEntity implements Api.Role {
     })
     public name: string;
 
+    @Column({
+        unique: true,
+        length: 3,
+    })
+    public order: number;
+
     @OneToMany(() => StaffEntity, staff => staff.id)
     user: StaffEntity[];
 
