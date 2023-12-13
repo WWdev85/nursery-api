@@ -6,6 +6,7 @@ export interface CreateRole {
 
 export interface Role extends CreateRole {
     id: string | undefined,
+    order: number,
 };
 
 export enum CreateRoleResponse {

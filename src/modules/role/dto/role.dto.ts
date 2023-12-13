@@ -1,4 +1,4 @@
-import { IsString, IsArray } from "class-validator";
+import { IsString, IsArray, IsNumber } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
 import { ListDto } from "../../../dtos";
 import { CreateRole, Role } from '../../../../types';
@@ -14,6 +14,10 @@ export class RoleDto extends CreateRoleDto implements Role {
     @IsString()
     @ApiProperty()
     readonly id: string;
+
+    @IsNumber()
+    @ApiProperty()
+    readonly order: number;
 }
 
 export class RolesListDto extends ListDto<RoleDto> {
