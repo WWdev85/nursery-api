@@ -33,7 +33,7 @@ export class StaffService {
                 newStaff.photoFn = photo.filename
             }
             await newStaff.save()
-            return CreateStaffResponse.Success
+            return JSON.parse(CreateStaffResponse.Success)
         } catch (error) {
             throw error
         }
@@ -71,7 +71,7 @@ export class StaffService {
                     )
                 }
                 await StaffEntity.update(staff.id, newStaff)
-                return UpdateStaffResponse.Success
+                return JSON.parse(UpdateStaffResponse.Success)
             }
         } catch (error) {
             throw error
@@ -109,7 +109,6 @@ export class StaffService {
                 .leftJoinAndSelect('staff.role', 'role')
                 .where('staff.id = :id', { id: id })
                 .getOne();
-            console.log(response)
             return this.filter(response)
         } catch (error) {
             throw error
