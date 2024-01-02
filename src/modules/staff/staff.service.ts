@@ -33,7 +33,7 @@ export class StaffService {
                 newStaff.photoFn = photo.filename
             }
             await newStaff.save()
-            return JSON.parse(CreateStaffResponse.Success)
+            return JSON.stringify(CreateStaffResponse.Success)
         } catch (error) {
             throw error
         }
@@ -71,7 +71,7 @@ export class StaffService {
                     )
                 }
                 await StaffEntity.update(staff.id, newStaff)
-                return JSON.parse(UpdateStaffResponse.Success)
+                return JSON.stringify(UpdateStaffResponse.Success)
             }
         } catch (error) {
             throw error
