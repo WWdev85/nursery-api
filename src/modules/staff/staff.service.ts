@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { CreateStaffResponse, DeleteStaffResponse, GetOneStaffResponse, GetPaginatedListOfStaff, MulterDiskUploadedFiles, Order, Staff, UpdateStaffResponse } from '../../../types';
+import { Admin, CreateStaffResponse, DeleteStaffResponse, GetOneStaffResponse, GetPaginatedListOfStaff, MulterDiskUploadedFiles, Order, Staff, UpdateStaffResponse } from '../../../types';
 import * as path from 'path';
 import { unlink } from "node:fs/promises";
 import { storageDir } from "../../utils";
@@ -7,6 +7,7 @@ import { CreateStaffDto, UpdateStaffDto } from './dto/staff.dto';
 import { StaffEntity } from './staff.entity';
 import { RoleEntity } from '../role/role.entity';
 import { ListQueryDto } from '../../dtos';
+import { AdminEntity } from '../admin/admin.entity';
 
 
 @Injectable()
@@ -64,13 +65,20 @@ export class StaffService {
                 throw new HttpException(UpdateStaffResponse.StaffNotFound, HttpStatus.NOT_FOUND);
             } else {
                 const oldPhoto = staffMember?.photoFn
-                console.log(oldPhoto, photo)
                 if (oldPhoto && photo) {
                     await unlink(
                         path.join(storageDir(), 'staff', oldPhoto)
                     )
                 }
                 await StaffEntity.update(staff.id, newStaff)
+                const admin = await AdminEntity.createQueryBuilder('admin')
+                    .leftJoinAndSelect('admin.staff', 'staff')
+                    .where('staff.id = :id', { id: staff.id })
+                    .getOne()
+
+                const newAdmin = new AdminEntity(admin as Admin)
+                newAdmin.email = staff.email
+                await AdminEntity.update(admin.id, newAdmin)
                 return JSON.stringify(UpdateStaffResponse.Success)
             }
         } catch (error) {
