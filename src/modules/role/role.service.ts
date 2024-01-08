@@ -70,10 +70,11 @@ export class RoleService {
     async getRolesList(listQuery: ListQueryDto): Promise<GetRolesListResponse> {
         const { search, page, limit, orderBy, order } = listQuery
         try {
-            const queryBuilder = RoleEntity.createQueryBuilder('role');
+            const queryBuilder = RoleEntity.createQueryBuilder('role')
+                .loadRelationCountAndMap('role.staffCount', 'role.staff')
+
             if (search) {
-                queryBuilder
-                    .where('role.name LIKE :search', { search: `%${search}%` })
+                queryBuilder.andWhere('role.name LIKE :search', { search: `%${search}%` });
             }
             if (orderBy && order) {
                 queryBuilder.addOrderBy(`role.${orderBy}`, order.toUpperCase() as Order);
