@@ -21,8 +21,8 @@ export class RoleEntity extends BaseEntity implements Api.Role {
     })
     public order: number;
 
-    @OneToMany(() => StaffEntity, staff => staff.id)
-    user: StaffEntity[];
+    @OneToMany(() => StaffEntity, staff => staff.role)
+    staff: StaffEntity[];
 
     constructor(role?: Api.Role) {
         super();
