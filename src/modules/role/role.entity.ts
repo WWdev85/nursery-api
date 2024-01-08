@@ -28,5 +28,6 @@ export class RoleEntity extends BaseEntity implements Api.Role {
         super();
         this.id = role?.id;
         this.name = role?.name;
+        this.order = role?.order;
     }
 }
