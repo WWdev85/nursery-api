@@ -16,7 +16,6 @@ export class RoleEntity extends BaseEntity implements Api.Role {
     public name: string;
 
     @Column({
-        unique: true,
         unsigned: true,
     })
     public order: number;
