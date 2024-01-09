@@ -37,7 +37,7 @@ export class RoleService {
             if (!await this.findRole(role.id)) {
                 throw new HttpException(UpdateRoleResponse.NotFound, HttpStatus.NOT_FOUND);
             }
-            if (await this.findRoleName(role.name)) {
+            if (await this.findRoleName(role.name, role.id)) {
                 throw new HttpException(UpdateRoleResponse.Duplicated, HttpStatus.CONFLICT);
             }
             await RoleEntity.update(role.id, new RoleEntity(role as Role))
@@ -113,12 +113,18 @@ export class RoleService {
      * Check if role name exists
      */
 
-    async findRoleName(name: string): Promise<boolean> {
+    async findRoleName(name: string, id?: string): Promise<boolean> {
         try {
-            const response = await RoleEntity.createQueryBuilder('role')
-                .where('role.name = :name', { name: name })
-                .getOne();
+            let query = RoleEntity.createQueryBuilder('role')
+                .where('role.name = :name', { name: name });
+
+            if (id) {
+                query = query.andWhere('role.id <> :id', { id: id });
+            }
+            const response = await query.getOne();
             return response ? true : false
+
+
         } catch (error) {
             throw error
         }
