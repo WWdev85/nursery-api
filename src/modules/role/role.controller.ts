@@ -34,7 +34,7 @@ export class RoleController {
     @Protected([AdminRole.SuperAdmin])
     async addRole(
         @Body() role: CreateRoleDto
-    ): Promise<CreateRoleResponse> {
+    ): Promise<string> {
         return await this.roleService.addRole(role)
     }
 
@@ -56,7 +56,7 @@ export class RoleController {
     @Protected([AdminRole.SuperAdmin])
     async updateRole(
         @Body() role: RoleDto
-    ): Promise<UpdateRoleResponse> {
+    ): Promise<string> {
         return await this.roleService.updateRole(role)
     }
 
