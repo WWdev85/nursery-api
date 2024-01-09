@@ -15,14 +15,14 @@ export class RoleService {
      * Create role.
      */
 
-    async addRole(role: CreateRoleDto): Promise<CreateRoleResponse> {
+    async addRole(role: CreateRoleDto): Promise<string> {
         try {
             if (await this.findRoleName(role.name)) {
                 throw new HttpException(CreateRoleResponse.Duplicated, HttpStatus.CONFLICT);
             }
             const newRole = new RoleEntity(role as Role)
             await newRole.save()
-            return CreateRoleResponse.Success
+            return JSON.stringify(CreateRoleResponse.Success)
         } catch (error) {
             throw error
         }
@@ -32,7 +32,7 @@ export class RoleService {
      * Update role
      */
 
-    async updateRole(role: RoleDto): Promise<UpdateRoleResponse> {
+    async updateRole(role: RoleDto): Promise<string> {
         try {
             if (!await this.findRole(role.id)) {
                 throw new HttpException(UpdateRoleResponse.NotFound, HttpStatus.NOT_FOUND);
@@ -41,7 +41,7 @@ export class RoleService {
                 throw new HttpException(UpdateRoleResponse.Duplicated, HttpStatus.CONFLICT);
             }
             await RoleEntity.update(role.id, new RoleEntity(role as Role))
-            return UpdateRoleResponse.Success
+            return JSON.stringify(UpdateRoleResponse.Success)
         } catch (error) {
             throw error
         }
