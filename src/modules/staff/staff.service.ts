@@ -8,6 +8,7 @@ import { StaffEntity } from './staff.entity';
 import { RoleEntity } from '../role/role.entity';
 import { ListQueryDto } from '../../dtos';
 import { AdminEntity } from '../admin/admin.entity';
+import { SubjectEntity } from '../subject/subject.entity';
 
 
 @Injectable()
@@ -29,6 +30,12 @@ export class StaffService {
                 newStaff.role = role
             } else {
                 throw new HttpException(CreateStaffResponse.RoleNotFound, HttpStatus.NOT_FOUND);
+            }
+            console.log(staff)
+            if (staff.subjectIds?.length > 0) {
+                const subjects = await Promise.all(staff.subjectIds.split(',').map(id => this.findSubject(id)));
+                newStaff.subjects = subjects.filter(subject => subject !== undefined);
+                console.log(newStaff.subjects)
             }
             if (photo) {
                 newStaff.photoFn = photo.filename
@@ -60,6 +67,11 @@ export class StaffService {
             }
             if (photo) {
                 newStaff.photoFn = photo.filename
+            }
+            if (staff.subjectIds?.length > 0) {
+                const subjects = await Promise.all(staff.subjectIds.split(',').map(id => this.findSubject(id)));
+                newStaff.subjects = subjects.filter(subject => subject !== undefined);
+                console.log(newStaff.subjects)
             }
             if (!staffMember) {
                 throw new HttpException(UpdateStaffResponse.StaffNotFound, HttpStatus.NOT_FOUND);
@@ -160,6 +172,7 @@ export class StaffService {
         try {
             const queryBuilder = StaffEntity.createQueryBuilder('staff')
                 .leftJoin("staff.role", "role")
+                .leftJoinAndSelect("staff.subjects", "subject")
                 .addSelect("role.name")
 
             if (search) {
@@ -172,6 +185,7 @@ export class StaffService {
                     .orWhere('staff.address LIKE :search', { search: `%${search}%` })
                     .orWhere('staff.description LIKE :search', { search: `%${search}%` })
                     .orWhere('role.name LIKE :search', { search: `%${search}%` })
+                    .orWhere('subject.name LIKE :search', { search: `%${search}%` })
             }
 
             if (orderBy && order) {
@@ -181,6 +195,7 @@ export class StaffService {
             queryBuilder.skip(limit * (page - 1)).take(limit);
             const [items, count] = await queryBuilder.getManyAndCount();
             const totalPages = Math.ceil(count / limit)
+            console.log(items)
 
             return {
                 items: items.map(item => this.filter(item)),
@@ -235,11 +250,26 @@ export class StaffService {
     }
 
     /**
+     * Check if subject exists
+     */
+
+    async findSubject(id: string): Promise<SubjectEntity> {
+        try {
+            const response = await SubjectEntity.createQueryBuilder('subject')
+                .where('subject.id = :id', { id: id })
+                .getOne();
+            return response
+        } catch (error) {
+            throw error
+        }
+    }
+
+    /**
      * Filter response
      */
 
     filter(staffMember: StaffEntity): GetOneStaffResponse {
-        const { id, name, surname, email, phone, address, role, isVisible, description } = staffMember
+        const { id, name, surname, email, phone, address, role, isVisible, description, subjects } = staffMember
         const staff = {
             id: id,
             name: name,
@@ -250,6 +280,7 @@ export class StaffService {
             phone: phone,
             isVisible: isVisible,
             description: description,
+            subjects: subjects
         }
         return staff
     }

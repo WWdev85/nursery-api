@@ -10,6 +10,7 @@ export interface CreateStaff {
     isVisible: boolean,
     description?: string,
     roleId?: string,
+    subjectIds?: string,
 }
 
 export interface UpdateStaff extends CreateStaff {
