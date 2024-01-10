@@ -127,6 +127,7 @@ export class StaffService {
         try {
             const response = await StaffEntity.createQueryBuilder('staff')
                 .leftJoinAndSelect('staff.role', 'role')
+                .leftJoinAndSelect("staff.subjects", "subject")
                 .where('staff.id = :id', { id: id })
                 .getOne();
             return this.filter(response)

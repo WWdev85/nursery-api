@@ -156,6 +156,7 @@ export class StaffController {
         type: StaffListDto,
         description: 'Response interface: `StaffList`',
     })
+    @Protected([AdminRole.SuperAdmin])
     async getAllStaffMembers(@Query() query: ListQueryDto): Promise<GetPaginatedListOfStaff> {
         return this.staffService.getAllStaffMembers(query)
     }
