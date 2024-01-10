@@ -31,11 +31,9 @@ export class StaffService {
             } else {
                 throw new HttpException(CreateStaffResponse.RoleNotFound, HttpStatus.NOT_FOUND);
             }
-            console.log(staff)
             if (staff.subjectIds?.length > 0) {
                 const subjects = await Promise.all(staff.subjectIds.split(',').map(id => this.findSubject(id)));
                 newStaff.subjects = subjects.filter(subject => subject !== undefined);
-                console.log(newStaff.subjects)
             }
             if (photo) {
                 newStaff.photoFn = photo.filename
@@ -65,14 +63,14 @@ export class StaffService {
             } else {
                 throw new HttpException(UpdateStaffResponse.RoleNotFound, HttpStatus.NOT_FOUND);
             }
-            if (photo) {
-                newStaff.photoFn = photo.filename
-            }
             if (staff.subjectIds?.length > 0) {
                 const subjects = await Promise.all(staff.subjectIds.split(',').map(id => this.findSubject(id)));
                 newStaff.subjects = subjects.filter(subject => subject !== undefined);
-                console.log(newStaff.subjects)
             }
+            if (photo) {
+                newStaff.photoFn = photo.filename
+            }
+
             if (!staffMember) {
                 throw new HttpException(UpdateStaffResponse.StaffNotFound, HttpStatus.NOT_FOUND);
             } else {
@@ -82,7 +80,7 @@ export class StaffService {
                         path.join(storageDir(), 'staff', oldPhoto)
                     )
                 }
-                await StaffEntity.update(staff.id, newStaff)
+                await StaffEntity.save(newStaff)
                 const admin = await AdminEntity.createQueryBuilder('admin')
                     .leftJoinAndSelect('admin.staff', 'staff')
                     .where('staff.id = :id', { id: staff.id })

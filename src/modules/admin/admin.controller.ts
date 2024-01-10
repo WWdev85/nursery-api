@@ -28,6 +28,7 @@ export class AdminController {
     @ApiCreatedResponse({
         description: 'Admin has been added',
     })
+    @Protected([AdminRole.SuperAdmin])
     async addAdmin(
         @Body() newAdmin: CreateAdminDto
     ): Promise<string> {
@@ -116,8 +117,12 @@ export class AdminController {
     })
     @HttpCode(204)
     @Protected([AdminRole.SuperAdmin])
-    async deleteAdmin(@Param('id') id: string,) {
-        await this.adminService.deleteAdmin(id)
+    async deleteAdmin(
+        @Param('id') id: string,
+        @Requester() admin: AdminEntity) {
+        if (admin.id !== id) {
+            await this.adminService.deleteAdmin(id)
+        }
     }
 
     /**
