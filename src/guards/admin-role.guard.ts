@@ -5,7 +5,7 @@ import { AdminEntity } from "../modules/admin/admin.entity";
 
 declare module 'fastify' {
     interface FastifyRequest {
-        user: AdminEntity; // Dodaj własną definicję 'user' na obiekcie FastifyRequest
+        user: AdminEntity;
     }
 }
 export class AdminRoleGuard implements CanActivate {

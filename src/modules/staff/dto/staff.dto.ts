@@ -42,6 +42,11 @@ export class CreateSaffWithoutFileDto implements CreateStaff {
     @IsOptional()
     @ApiProperty({ required: false })
     readonly description?: string;
+
+    @IsString()
+    @IsOptional()
+    @ApiProperty({ required: false })
+    readonly subjectIds?: string;
 }
 
 export class CreateStaffDto extends CreateSaffWithoutFileDto implements CreateStaff {

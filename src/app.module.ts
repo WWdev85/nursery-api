@@ -10,6 +10,7 @@ import { AdminModule } from './modules/admin/admin.module';
 import { MailModule } from './modules/mail/mail.module';
 import { MailService } from './modules/mail/mail.service';
 import { SettingsModule } from './modules/settings/settings.module';
+import { SubjectModule } from './modules/subject/subject.module';
 
 @Module({
   imports: [
@@ -30,7 +31,7 @@ import { SettingsModule } from './modules/settings/settings.module';
       }),
       inject: [ConfigService],
     }),
-    AuthModule, SettingsModule, StaffModule, RoleModule, AdminModule, MailModule],
+    AuthModule, SettingsModule, StaffModule, RoleModule, AdminModule, MailModule, SubjectModule],
   controllers: [AppController],
   providers: [AppService, MailService],
 })

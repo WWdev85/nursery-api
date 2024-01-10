@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, Unique } from "typeorm";
+import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn, Unique } from "typeorm";
 
 import * as Api from '../../../types'
 import { StaffEntity } from "../staff/staff.entity";
