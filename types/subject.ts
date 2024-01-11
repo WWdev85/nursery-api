@@ -2,6 +2,7 @@ import { PaginatedList } from 'types';
 
 export interface CreateSubject {
     name: string,
+    staffIds?: string,
 };
 
 export interface Subject extends CreateSubject {

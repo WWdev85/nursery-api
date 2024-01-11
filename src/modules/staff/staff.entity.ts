@@ -57,8 +57,7 @@ export class StaffEntity extends BaseEntity implements Staff {
     @OneToOne(type => AdminEntity, { cascade: true })
     public admin: AdminEntity;
 
-    @ManyToMany(() => SubjectEntity, subject => subject.id)
-    @JoinTable()
+    @ManyToMany(() => SubjectEntity, subject => subject.staffMembers)
     subjects: SubjectEntity[];
 
     constructor(staff?: Staff) {

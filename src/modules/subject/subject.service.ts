@@ -3,6 +3,7 @@ import { CreateSubjectDto, SubjectDto } from './dto/subject.dto';
 import { SubjectEntity } from './subject.entity';
 import { CreateSubjectResponse, DeleteSubjectResponse, GetSubjectListResponse, Order, Subject, UpdateSubjectResponse } from '../../../types';
 import { ListQueryDto } from 'src/dtos';
+import { StaffEntity } from '../staff/staff.entity';
 
 /**
  * Subject mamagment.
@@ -14,13 +15,19 @@ export class SubjectService {
     /**
      * Create subject.
      */
-    async addSubject(role: CreateSubjectDto): Promise<string> {
+    async addSubject(subject: CreateSubjectDto): Promise<string> {
         try {
-            if (await this.findSubjectName(role.name)) {
+
+            if (await this.findSubjectName(subject.name)) {
                 throw new HttpException(CreateSubjectResponse.Duplicated, HttpStatus.CONFLICT);
             }
-            const newRole = new SubjectEntity(role as Subject)
-            await newRole.save()
+            const newSubject = new SubjectEntity(subject as Subject)
+            if (subject.staffIds?.length > 0) {
+                const subjects = await Promise.all(subject.staffIds.split(',').map(id => this.findStaffMember(id)));
+                newSubject.staffMembers = subjects.filter(subject => subject !== undefined);
+            }
+
+            await newSubject.save()
             return JSON.stringify(CreateSubjectResponse.Success)
         } catch (error) {
             throw error
@@ -39,7 +46,15 @@ export class SubjectService {
             if (await this.findSubjectName(subject.name, subject.id)) {
                 throw new HttpException(UpdateSubjectResponse.Duplicated, HttpStatus.CONFLICT);
             }
+            const newSubject = new SubjectEntity(subject as Subject)
+            if (subject.staffIds?.length > 0) {
+                const subjects = await Promise.all(subject.staffIds.split(',').map(id => this.findStaffMember(id)));
+                newSubject.staffMembers = subjects.filter(subject => subject !== undefined);
+            } else {
+                newSubject.staffMembers = []
+            }
             await SubjectEntity.update(subject.id, new SubjectEntity(subject as Subject))
+
             return JSON.stringify(UpdateSubjectResponse.Success)
         } catch (error) {
             throw error
@@ -70,7 +85,7 @@ export class SubjectService {
         const { search, page, limit, orderBy, order } = listQuery
         try {
             const queryBuilder = SubjectEntity.createQueryBuilder('subject')
-                .leftJoinAndSelect('subject.staff', 'staff')
+                .leftJoinAndSelect('subject.staffMembers', 'staff')
 
             if (search) {
                 queryBuilder.andWhere('subject.name LIKE :search', { search: `%${search}%` });
@@ -125,6 +140,17 @@ export class SubjectService {
             return response ? true : false
 
 
+        } catch (error) {
+            throw error
+        }
+    }
+
+    async findStaffMember(id: string): Promise<StaffEntity> {
+        try {
+            const response = await StaffEntity.createQueryBuilder('staff')
+                .where('staff.id = :id', { id: id })
+                .getOne();
+            return response
         } catch (error) {
             throw error
         }
