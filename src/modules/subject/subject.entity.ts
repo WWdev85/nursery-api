@@ -15,9 +15,9 @@ export class SubjectEntity extends BaseEntity implements Api.Subject {
     })
     public name: string;
 
-    @ManyToMany(() => StaffEntity, staff => staff.id)
+    @ManyToMany(() => StaffEntity, staff => staff.subjects)
     @JoinTable()
-    staff: StaffEntity[];
+    staffMembers: StaffEntity[];
 
     constructor(subject?: Api.Subject) {
         super();
