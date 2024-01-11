@@ -70,6 +70,8 @@ export class SubjectService {
         const { search, page, limit, orderBy, order } = listQuery
         try {
             const queryBuilder = SubjectEntity.createQueryBuilder('subject')
+                .leftJoinAndSelect('subject.staff', 'staff')
+
             if (search) {
                 queryBuilder.andWhere('subject.name LIKE :search', { search: `%${search}%` });
             }
