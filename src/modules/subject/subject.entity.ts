@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
 
 import * as Api from '../../../types'
 import { StaffEntity } from "../staff/staff.entity";
@@ -15,7 +15,8 @@ export class SubjectEntity extends BaseEntity implements Api.Subject {
     })
     public name: string;
 
-    @ManyToMany(() => StaffEntity, staff => staff.id, { eager: true })
+    @ManyToMany(() => StaffEntity, staff => staff.id)
+    @JoinTable()
     staff: StaffEntity[];
 
     constructor(subject?: Api.Subject) {

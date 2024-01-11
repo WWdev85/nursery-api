@@ -66,6 +66,8 @@ export class StaffService {
             if (staff.subjectIds?.length > 0) {
                 const subjects = await Promise.all(staff.subjectIds.split(',').map(id => this.findSubject(id)));
                 newStaff.subjects = subjects.filter(subject => subject !== undefined);
+            } else {
+                newStaff.subjects = []
             }
             if (photo) {
                 newStaff.photoFn = photo.filename
