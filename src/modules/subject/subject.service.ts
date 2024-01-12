@@ -53,7 +53,8 @@ export class SubjectService {
             } else {
                 newSubject.staffMembers = []
             }
-            await SubjectEntity.update(subject.id, new SubjectEntity(subject as Subject))
+            await SubjectEntity.save(newSubject)
+
 
             return JSON.stringify(UpdateSubjectResponse.Success)
         } catch (error) {

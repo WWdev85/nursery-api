@@ -9,3 +9,4 @@ export * from './auth';
 export * from './settings';
 export * from './email';
 export * from './subject';
+export * from './select-option';

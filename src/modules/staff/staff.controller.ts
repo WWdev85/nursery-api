@@ -5,8 +5,8 @@ import * as path from "path";
 import { multerStorage, storageDir } from "../../utils";
 import { StaffService } from './staff.service';
 import { CreateStaffDto, StaffDto, StaffListDto, UpdateStaffDto } from './dto/staff.dto';
-import { AdminRole, GetOneStaffResponse, GetPaginatedListOfStaff, MulterDiskUploadedFiles } from './../../../types';
-import { ListQueryDto } from '../../dtos';
+import { AdminRole, GetOneStaffResponse, GetPaginatedListOfSelectOptions, GetPaginatedListOfStaff, MulterDiskUploadedFiles } from './../../../types';
+import { ListQueryDto, SelectOptionDto } from '../../dtos';
 import { Protected } from '../../decorators';
 
 /**
@@ -159,6 +159,23 @@ export class StaffController {
     @Protected([AdminRole.SuperAdmin])
     async getAllStaffMembers(@Query() query: ListQueryDto): Promise<GetPaginatedListOfStaff> {
         return this.staffService.getAllStaffMembers(query)
+    }
+
+    /**
+    * Get teachers.
+    */
+
+    @Get('get-teachers')
+    @ApiOperation({
+        summary: 'Get list of teachers',
+    })
+    @ApiOkResponse({
+        type: SelectOptionDto,
+        description: 'Response interface: `StaffList`',
+    })
+    @Protected([AdminRole.SuperAdmin])
+    async getListofTeachers(@Query() query: ListQueryDto): Promise<GetPaginatedListOfSelectOptions> {
+        return this.staffService.getListOfTeachers(query)
     }
 
 }
