@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { Admin, CreateStaffResponse, DeleteStaffResponse, GetOneStaffResponse, GetPaginatedListOfStaff, MulterDiskUploadedFiles, Order, Staff, UpdateStaffResponse } from '../../../types';
+import { Admin, CreateStaffResponse, DeleteStaffResponse, GetOneStaffResponse, GetPaginatedListOfSelectOptions, GetPaginatedListOfStaff, MulterDiskUploadedFiles, Order, Staff, UpdateStaffResponse } from '../../../types';
 import * as path from 'path';
 import { unlink } from "node:fs/promises";
 import { storageDir } from "../../utils";
@@ -71,6 +71,10 @@ export class StaffService {
             }
             if (photo) {
                 newStaff.photoFn = photo.filename
+            } else {
+                if (staffMember.photoFn) {
+                    newStaff.photoFn = staffMember.photoFn
+                }
             }
 
             if (!staffMember) {
@@ -88,9 +92,11 @@ export class StaffService {
                     .where('staff.id = :id', { id: staff.id })
                     .getOne()
 
-                const newAdmin = new AdminEntity(admin as Admin)
-                newAdmin.email = staff.email
-                await AdminEntity.update(admin.id, newAdmin)
+                if (admin) {
+                    const newAdmin = new AdminEntity(admin as Admin)
+                    newAdmin.email = staff.email
+                    await AdminEntity.update(admin.id, newAdmin)
+                }
                 return JSON.stringify(UpdateStaffResponse.Success)
             }
         } catch (error) {
@@ -196,10 +202,51 @@ export class StaffService {
             queryBuilder.skip(limit * (page - 1)).take(limit);
             const [items, count] = await queryBuilder.getManyAndCount();
             const totalPages = Math.ceil(count / limit)
-            console.log(items)
+
 
             return {
                 items: items.map(item => this.filter(item)),
+                page: page,
+                totalPages: totalPages,
+                totalItems: count,
+            }
+        } catch (error) {
+            throw error
+        }
+    }
+
+    async getListOfTeachers(listQuery: ListQueryDto): Promise<GetPaginatedListOfSelectOptions> {
+        const { search, page, limit, orderBy, order } = listQuery
+        try {
+            const queryBuilder = StaffEntity.createQueryBuilder('staff')
+                //.select(["staff.name", "staff.surname", "staff.id"])
+                .leftJoin("staff.role", "role")
+                .addSelect("role.name")
+                .where('role.name = :name', { name: 'Nauczyciel' })
+
+            if (search) {
+                queryBuilder
+                    .andWhere('staff.name LIKE :search', { search: `%${search}%` })
+                    .orWhere('staff.surname LIKE :search', { search: `%${search}%` })
+            }
+
+            if (orderBy && order) {
+                queryBuilder.addOrderBy(`staff.${orderBy}`, order.toUpperCase() as Order);
+            }
+
+            queryBuilder.skip(limit * (page - 1)).take(limit);
+            const [items, count] = await queryBuilder.getManyAndCount();
+            const totalPages = Math.ceil(count / limit)
+
+
+            return {
+                items: items.map(item => {
+                    return {
+                        id: item.id,
+                        name: item.name + " " + item.surname,
+                        role: item.role
+                    }
+                }),
                 page: page,
                 totalPages: totalPages,
                 totalItems: count,

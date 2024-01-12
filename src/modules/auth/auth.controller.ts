@@ -44,7 +44,6 @@ export class AuthController {
         @Requester() admin: AdminEntity,
         @Res() res: Response
     ) {
-        console.log(admin)
         return this.authService.logout(admin, res, host.get('host'))
     }
 
@@ -60,7 +59,6 @@ export class AuthController {
     async check(
         @Requester() admin: AdminEntity,
     ): Promise<string> {
-        console.log(admin)
         return await this.authService.check(admin)
     }
 }
