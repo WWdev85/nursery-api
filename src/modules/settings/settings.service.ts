@@ -39,7 +39,7 @@ export class SettingsService {
                     throw new Error()
                 }
             }
-            return UpdateSettingsResponse.Success
+            return JSON.stringify(UpdateSettingsResponse.Success)
         } catch (error) {
             try {
                 if (logo) {

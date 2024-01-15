@@ -38,7 +38,7 @@ export class AdminService {
                 newAdmin.email = staffMember.email
                 await newAdmin.save()
                 this.sendCode(staffMember.email, EmailType.CREATE_ADMIN)
-                return CreateAdminResponse.Success
+                return JSON.stringify(CreateAdminResponse.Success)
             } else {
                 throw new HttpException(CreateAdminResponse.StaffNotFound, HttpStatus.NOT_FOUND);
             }
