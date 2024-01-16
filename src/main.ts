@@ -45,7 +45,7 @@ const appConfig = (app: INestApplication<any>) => {
 
       transform: true,
       transformOptions: {
-        enableImplicitConversion: true,
+        //enableImplicitConversion: true,
       },
     }
 

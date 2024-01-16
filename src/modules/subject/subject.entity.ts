@@ -1,7 +1,8 @@
-import { BaseEntity, Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 import * as Api from '../../../types'
 import { StaffEntity } from "../staff/staff.entity";
+import { CurriculumSubjectEntity } from "../../entities";
 
 @Entity('subject')
 export class SubjectEntity extends BaseEntity implements Api.Subject {
@@ -18,6 +19,9 @@ export class SubjectEntity extends BaseEntity implements Api.Subject {
     @ManyToMany(() => StaffEntity, staff => staff.subjects)
     @JoinTable()
     staffMembers: StaffEntity[];
+
+    @OneToMany(() => CurriculumSubjectEntity, curriculumSubject => curriculumSubject.subject)
+    curriculumSubjects: CurriculumSubjectEntity[];
 
     constructor(subject?: Api.Subject) {
         super();
