@@ -10,3 +10,4 @@ export * from './settings';
 export * from './email';
 export * from './subject';
 export * from './select-option';
+export * from './curriculum';

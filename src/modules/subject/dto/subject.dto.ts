@@ -18,8 +18,6 @@ export class SubjectDto extends CreateSubjectDto implements Subject {
     @IsString()
     @ApiProperty()
     readonly id: string;
-
-
 }
 
 export class SubjectsListDto extends ListDto<SubjectDto> {
