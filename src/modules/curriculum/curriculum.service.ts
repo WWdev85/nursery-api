@@ -59,7 +59,8 @@ export class CurriculumService {
             })
             if (curriculum.subjects?.length > 0) {
                 curriculum.subjects.map(async (subject) => {
-                    if (!currentCurriculumSubjects.find(item => item.subject.id === subject.subjectId)) {
+                    const curricuumSubject = currentCurriculumSubjects?.find(item => item.subject.id === subject.subjectId)
+                    if (!curricuumSubject) {
                         const subjectEntity = await this.findSubject(subject.subjectId)
                         CurriculumSubjectEntity.save({
                             curriculum: savedCurriculum,
@@ -67,6 +68,13 @@ export class CurriculumService {
                             weeklyHours: subject.hours
                         })
                         return subject
+                    } else {
+                        CurriculumSubjectEntity.update(curricuumSubject.id, {
+                            id: curricuumSubject.id,
+                            curriculum: savedCurriculum,
+                            subject: curricuumSubject.subject,
+                            weeklyHours: subject.hours
+                        })
                     }
                 });
             }
