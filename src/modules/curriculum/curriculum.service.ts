@@ -45,23 +45,32 @@ export class CurriculumService {
     async updateCurriculum(curriculum: CurriculumDto): Promise<string> {
         try {
 
-            if (await this.findCurriculumName(curriculum.name)) {
+            if (await this.findCurriculumName(curriculum.name, curriculum.id)) {
                 throw new HttpException(CreateCurriculumResponse.Duplicated, HttpStatus.CONFLICT);
             }
             const newCurriculum = new CurriculumEntity(curriculum as Curriculum)
+            const currentCurriculum = await this.getOneCurriculum(curriculum.id) as any
             const savedCurriculum = await newCurriculum.save()
+            const currentCurriculumSubjects = currentCurriculum?.curriculumSubjects.map(sub => {
+                if (!curriculum.subjects.find(item => item.subjectId === sub.subject.id)) {
+                    CurriculumSubjectEntity.delete(sub.id)
+                }
+                return sub
+            })
             if (curriculum.subjects?.length > 0) {
                 curriculum.subjects.map(async (subject) => {
-                    const subjectEntity = await this.findSubject(subject.subjectId)
-                    CurriculumSubjectEntity.save({
-                        curriculum: savedCurriculum,
-                        subject: subjectEntity,
-                        weeklyHours: subject.hours
-                    })
-                    return subject
+                    if (!currentCurriculumSubjects.find(item => item.subject.id === subject.subjectId)) {
+                        const subjectEntity = await this.findSubject(subject.subjectId)
+                        CurriculumSubjectEntity.save({
+                            curriculum: savedCurriculum,
+                            subject: subjectEntity,
+                            weeklyHours: subject.hours
+                        })
+                        return subject
+                    }
                 });
             }
-            return JSON.stringify(CreateCurriculumResponse.Success)
+            return JSON.stringify(UpdateCurriculumResponse.Success)
         } catch (error) {
             throw error
         }
