@@ -3,6 +3,7 @@ import { Staff } from '../../../types'
 import { RoleEntity } from "../role/role.entity";
 import { AdminEntity } from "../admin/admin.entity";
 import { SubjectEntity } from "../subject/subject.entity";
+import { GroupEntity } from "../group/group.entity";
 
 
 @Entity('staff')
@@ -59,6 +60,10 @@ export class StaffEntity extends BaseEntity implements Staff {
 
     @ManyToMany(() => SubjectEntity, subject => subject.staffMembers)
     subjects: SubjectEntity[];
+
+    @OneToMany(() => GroupEntity, group => group.teacher)
+    groups: GroupEntity[];
+
 
     constructor(staff?: Staff) {
         super();
