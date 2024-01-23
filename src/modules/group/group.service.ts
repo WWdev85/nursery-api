@@ -198,7 +198,8 @@ export class GroupService {
 
             return {
                 items: items.map((item: any) => {
-                    item.teacher.fullName = item.teacher.name + " " + item.teacher.surname;
+                    if (item.teacher)
+                        item.teacher.fullName = item.teacher.name + " " + item.teacher.surname;
                     return item
                 }),
                 page: page,
