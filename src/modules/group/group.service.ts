@@ -188,7 +188,7 @@ export class GroupService {
             }
 
             if (orderBy && order) {
-                queryBuilder.addOrderBy(`staff.${orderBy}`, order.toUpperCase() as Order);
+                queryBuilder.addOrderBy(`group.${orderBy}`, order.toUpperCase() as Order);
             }
 
             queryBuilder.skip(limit * (page - 1)).take(limit);
