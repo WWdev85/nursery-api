@@ -12,6 +12,7 @@ import { MailService } from './modules/mail/mail.service';
 import { SettingsModule } from './modules/settings/settings.module';
 import { SubjectModule } from './modules/subject/subject.module';
 import { CurriculumModule } from './modules/curriculum/curriculum.module';
+import { GroupModule } from './modules/group/group.module';
 
 @Module({
   imports: [
@@ -32,7 +33,7 @@ import { CurriculumModule } from './modules/curriculum/curriculum.module';
       }),
       inject: [ConfigService],
     }),
-    AuthModule, SettingsModule, StaffModule, RoleModule, AdminModule, MailModule, SubjectModule, CurriculumModule],
+    AuthModule, SettingsModule, StaffModule, RoleModule, AdminModule, MailModule, SubjectModule, CurriculumModule, GroupModule],
   controllers: [AppController],
   providers: [AppService, MailService],
 })

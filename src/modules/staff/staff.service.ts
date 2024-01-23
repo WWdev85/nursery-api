@@ -110,19 +110,15 @@ export class StaffService {
 
     async deleteStaffMember(id: string): Promise<DeleteStaffResponse> {
         try {
-
             if (this.getOneStaffMember(id)) {
                 await StaffEntity.delete(id)
                 return DeleteStaffResponse.Success
             } else {
                 throw new HttpException(DeleteStaffResponse.StaffNotFound, HttpStatus.NOT_FOUND);
             }
-
-
         } catch (error) {
             throw error
         }
-
     }
 
     /**

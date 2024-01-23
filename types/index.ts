@@ -11,3 +11,4 @@ export * from './email';
 export * from './subject';
 export * from './select-option';
 export * from './curriculum';
+export * from './group';
