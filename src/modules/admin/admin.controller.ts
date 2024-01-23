@@ -1,7 +1,7 @@
 import { Controller, Inject, Post, HttpCode, Body, Patch, Delete, Get, Param, Query } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { ApiTags, ApiOperation, ApiCreatedResponse, ApiOkResponse, ApiNotFoundResponse, ApiNoContentResponse } from '@nestjs/swagger';
-import { AdminListDto, AdminPayloadDto, CreateAdminDto } from './dto/admin.dto';
+import { AdminDto, AdminListDto, AdminPayloadDto, CreateAdminDto, UpdateAdminDto } from './dto/admin.dto';
 import { ChangePwdDto, ListQueryDto, ResetPasswordPayloadDto, SendCodePayloadDto, ValidateCodePayloadDto } from '../../dtos';
 import { Protected, Requester } from '../../decorators';
 import { AdminRole, EmailType, GetOneAdminResponse, GetPaginatedListOfAdmins } from '../../../types';
@@ -34,6 +34,27 @@ export class AdminController {
     ): Promise<string> {
         return this.adminService.addAdmin(newAdmin)
     }
+
+    /**
+    * Update administrator.
+    */
+
+    @Patch('update')
+    @ApiOperation({
+        summary: 'Update administrator',
+        description: 'Body interface: `UpdateAdmin`',
+    })
+    @ApiOkResponse({
+        description: 'Administrator has been updated',
+    })
+
+    @Protected([AdminRole.SuperAdmin, AdminRole.GroupAdmin])
+    async updateStaff(
+        @Body() admin: UpdateAdminDto,
+    ): Promise<string> {
+        return this.adminService.updateAdmin(admin)
+    }
+
 
     /**
     * Send code

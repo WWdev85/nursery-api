@@ -1,7 +1,8 @@
-import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Group } from "../../../types";
 import { StaffEntity } from "../staff/staff.entity";
 import { CurriculumEntity } from "../curriculum/cirriculum.entity";
+import { AdminEntity } from "../admin/admin.entity";
 
 
 
@@ -30,6 +31,10 @@ export class GroupEntity extends BaseEntity implements Group {
     @ManyToOne(() => CurriculumEntity, curriculum => curriculum.id)
     @JoinColumn()
     public curriculum: CurriculumEntity;
+
+    @ManyToMany(() => AdminEntity, admin => admin.groups)
+    @JoinTable()
+    admins: AdminEntity[];
 
 
     constructor(group?: Group) {

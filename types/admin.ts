@@ -9,6 +9,7 @@ export enum AdminRole {
 export interface CreateAdmin {
     staffId: string,
     role: AdminRole,
+    groupIds: string[],
 }
 
 export interface Admin {
@@ -22,6 +23,14 @@ export interface Admin {
 export enum CreateAdminResponse {
     Success = 'Admin has been created.',
     StaffNotFound = 'Staff mambember not exists.',
+}
+
+
+export enum UpdateAdminResponse {
+    Success = 'Administrator has been created.',
+    StaffNotFound = 'Staff mamber not exists.',
+    AdminNotFound = 'Administrator not exists.',
+    NotFound = "NotFound"
 }
 
 export type GetOneAdminResponse = {

@@ -4,6 +4,7 @@ export interface CreateGroup {
     name: string;
     teacherId?: string;
     curriculumId?: string
+    adminIds?: string[];
 }
 
 export interface Group extends CreateGroup {

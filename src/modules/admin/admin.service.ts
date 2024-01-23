@@ -1,12 +1,13 @@
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
-import { CreateAdminDto } from './dto/admin.dto';
+import { AdminDto, CreateAdminDto, UpdateAdminDto } from './dto/admin.dto';
 import { StaffEntity } from '../staff/staff.entity';
 import { AdminEntity } from './admin.entity';
 import { hashPwd } from '../../utils';
-import { Admin, CreateAdminResponse, DeleteAdminResponse, EmailType, GetOneAdminResponse, GetPaginatedListOfAdmins, Order, ResetPasswordResponse, SendCodeResponse, UpdatePasswordResponse, ValidateCodeResponse } from '../../../types';
+import { Admin, CreateAdminResponse, DeleteAdminResponse, EmailType, GetOneAdminResponse, GetPaginatedListOfAdmins, Order, ResetPasswordResponse, SendCodeResponse, UpdateAdminResponse, UpdatePasswordResponse, ValidateCodeResponse } from '../../../types';
 import { MailService } from '../mail/mail.service';
 import { ChangePwdDto, ListQueryDto, ResetPasswordPayloadDto, ValidateCodePayloadDto } from '../../dtos';
 import { SettingsEntity } from '../settings/settings.entity';
+import { GroupEntity } from '../group/group.entity';
 
 @Injectable()
 
@@ -33,6 +34,14 @@ export class AdminService {
                 .where('staff.id = :id', { id: admin.staffId })
                 .getOne()
 
+            if (admin.groupIds?.length > 0) {
+                newAdmin.groups = await Promise.all(admin.groupIds.map((id) => {
+                    return this.findGroup(id)
+                }));
+            } else {
+                newAdmin.groups = []
+            }
+
             if (staffMember) {
                 newAdmin.staff = staffMember
                 newAdmin.email = staffMember.email
@@ -41,6 +50,44 @@ export class AdminService {
                 return JSON.stringify(CreateAdminResponse.Success)
             } else {
                 throw new HttpException(CreateAdminResponse.StaffNotFound, HttpStatus.NOT_FOUND);
+            }
+        } catch (error) {
+            throw error
+        }
+    }
+
+    /**
+   * Update administrator
+   */
+
+    async updateAdmin(admin: UpdateAdminDto): Promise<string> {
+        try {
+            if (!await this.getOneAdmin(admin.id)) {
+                throw new HttpException(UpdateAdminResponse.AdminNotFound, HttpStatus.NOT_FOUND);
+            }
+
+            const newAdmin = new AdminEntity(admin as unknown as Admin)
+
+            const staffMember = await StaffEntity.createQueryBuilder('staff')
+                .where('staff.id = :id', { id: admin.staffId })
+                .getOne()
+
+            if (admin.groupIds?.length > 0) {
+                newAdmin.groups = await Promise.all(admin.groupIds.map((id) => {
+                    return this.findGroup(id)
+                }));
+            } else {
+                newAdmin.groups = []
+            }
+
+            if (staffMember) {
+                newAdmin.staff = staffMember;
+                newAdmin.email = staffMember.email
+                console.log(newAdmin)
+                await newAdmin.save()
+                return JSON.stringify(UpdateAdminResponse.Success)
+            } else {
+                throw new HttpException(UpdateAdminResponse.StaffNotFound, HttpStatus.NOT_FOUND);
             }
         } catch (error) {
             throw error
@@ -179,6 +226,8 @@ export class AdminService {
         try {
             const admin = await AdminEntity.createQueryBuilder('admin')
                 .leftJoinAndSelect('admin.staff', 'staff')
+                .leftJoin('admin.groups', 'group')
+                .addSelect(['group.id', 'group.name'])
                 .where('admin.id = :id', { id: id })
                 .getOne()
 
@@ -202,6 +251,8 @@ export class AdminService {
         try {
             const queryBuilder = AdminEntity.createQueryBuilder('admin')
                 .leftJoinAndSelect('admin.staff', 'staff')
+                .leftJoin('admin.groups', 'group')
+                .addSelect(['group.id', 'group.name'])
 
             if (search) {
                 queryBuilder
@@ -245,13 +296,32 @@ export class AdminService {
         return code.toString();
     }
 
+
+    /**
+    * Find Group
+    */
+
+    async findGroup(id: string): Promise<GroupEntity> {
+        try {
+            let query = GroupEntity.createQueryBuilder('group')
+                .where('group.id = :id', { id: id });
+
+            const response = await query.getOne();
+            return response
+
+
+        } catch (error) {
+            throw error
+        }
+    }
+
     /**
   * Filter response fields
   */
 
     filter(admin: AdminEntity): GetOneAdminResponse {
 
-        const { id, role, staff } = admin
+        const { id, role, staff, groups } = admin
         const adminResponse = {
             id: id,
             role: role,
@@ -265,6 +335,7 @@ export class AdminService {
                 role: staff.role,
                 isVisible: staff.isVisible
             },
+            groups: groups
         }
         return adminResponse
     }
