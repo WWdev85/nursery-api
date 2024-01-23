@@ -1,6 +1,7 @@
-import { BaseEntity, Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, JoinColumn, ManyToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { StaffEntity } from "../staff/staff.entity";
 import { Admin, AdminRole } from "../../../types";
+import { GroupEntity } from "../group/group.entity";
 
 
 @Entity('admin')
@@ -33,7 +34,10 @@ export class AdminEntity extends BaseEntity implements Admin {
 
     @OneToOne(type => StaffEntity, { onDelete: "CASCADE", nullable: false, eager: true })
     @JoinColumn()
-    staff: StaffEntity
+    staff: StaffEntity;
+
+    @ManyToMany(() => GroupEntity, group => group.admins)
+    groups: GroupEntity[];
 
     constructor(admin?: Admin) {
         super();

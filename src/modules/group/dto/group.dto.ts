@@ -21,6 +21,11 @@ export class CreateGroupDto implements CreateGroup {
     @ApiProperty({ required: false })
     readonly curriculumId?: string;
 
+    @IsArray()
+    @IsOptional()
+    @ApiProperty({ required: false })
+    readonly adminIds: string[];
+
     @ApiPropertyOptional({ type: 'string', format: 'binary', })
     @IsOptional()
     readonly photo?: Express.Multer.File

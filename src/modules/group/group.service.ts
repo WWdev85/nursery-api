@@ -8,6 +8,7 @@ import { unlink } from "node:fs/promises";
 import * as path from 'path';
 import { storageDir } from '../../utils';
 import { ListQueryDto } from 'src/dtos';
+import { AdminEntity } from '../admin/admin.entity';
 
 @Injectable()
 export class GroupService {
@@ -22,7 +23,6 @@ export class GroupService {
             if (await this.findGroupName(group.name)) {
                 throw new HttpException(CreateGroupResponse.Duplicated, HttpStatus.CONFLICT);
             }
-
             const teacher = await this.findTeacher(group.teacherId)
             const curriculum = await this.findCurriculum(group.curriculumId)
             const newGroup = new GroupEntity(group as Group)
@@ -38,6 +38,14 @@ export class GroupService {
             }
             if (photo) {
                 newGroup.photoFn = photo.filename
+            }
+
+            if (group.adminIds?.length > 0) {
+                newGroup.admins = await Promise.all(group.adminIds.map((id) => {
+                    return this.findAdmin(id)
+                }));
+            } else {
+                newGroup.admins = []
             }
             await newGroup.save()
             return JSON.stringify(CreateGroupResponse.Success)
@@ -64,6 +72,7 @@ export class GroupService {
                 const curriculum = await this.findCurriculum(group.curriculumId)
                 if (curriculum) {
                     newGroup.curriculum = curriculum
+                } else {
                     throw new HttpException(CreateGroupResponse.CurriculumNotFound, HttpStatus.NOT_FOUND);
                 }
             } else {
@@ -96,6 +105,14 @@ export class GroupService {
                 }
             } else {
                 throw new HttpException(UpdateGroupResponse.GroupNotFound, HttpStatus.NOT_FOUND);
+            }
+
+            if (group.adminIds?.length > 0) {
+                newGroup.admins = await Promise.all(group.adminIds.map((id) => {
+                    return this.findAdmin(id)
+                }));
+            } else {
+                newGroup.admins = []
             }
 
             await newGroup.save()
@@ -206,6 +223,21 @@ export class GroupService {
                 totalPages: totalPages,
                 totalItems: count,
             }
+        } catch (error) {
+            throw error
+        }
+    }
+
+    /**
+   * Check if admin exists
+   */
+
+    async findAdmin(id: string): Promise<AdminEntity> {
+        try {
+            let query = AdminEntity.createQueryBuilder('admin')
+                .where('admin.id = :id', { id: id });
+            const response = await query.getOne();
+            return response
         } catch (error) {
             throw error
         }
