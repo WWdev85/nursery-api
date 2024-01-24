@@ -149,9 +149,10 @@ export class GroupService {
                 .leftJoin('group.teacher', 'teacher')
                 .addSelect(['teacher.id', 'teacher.name', 'teacher.surname'])
                 .leftJoinAndSelect("group.curriculum", "curriculum")
+                .leftJoinAndSelect("group.admins", "admin")
                 .where('group.id = :id', { id: id })
                 .getOne();
-            return response
+            return this.filter(response)
         } catch (error) {
             throw error
         }
@@ -195,6 +196,7 @@ export class GroupService {
                 .leftJoin('group.teacher', 'teacher')
                 .addSelect(['teacher.id', 'teacher.name', 'teacher.surname'])
                 .leftJoinAndSelect("group.curriculum", "curriculum")
+                .leftJoinAndSelect("group.admins", "admin")
 
             if (search) {
                 queryBuilder
@@ -217,7 +219,7 @@ export class GroupService {
                 items: items.map((item: any) => {
                     if (item.teacher)
                         item.teacher.fullName = item.teacher.name + " " + item.teacher.surname;
-                    return item
+                    return this.filter(item)
                 }),
                 page: page,
                 totalPages: totalPages,
@@ -306,4 +308,22 @@ export class GroupService {
             .getOne();
         return group?.photoFn
     }
+
+    /**
+* Filter response fields
+*/
+
+    filter(group: GroupEntity): GetOneGroupResponse {
+
+        const { id, name, admins, curriculum, teacher } = group
+        const groupResponse = {
+            id: id,
+            name: name,
+            curriculum: curriculum,
+            teacher: teacher,
+            admins: admins
+        }
+        return groupResponse
+    }
+
 }
