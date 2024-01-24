@@ -13,6 +13,7 @@ import { SettingsModule } from './modules/settings/settings.module';
 import { SubjectModule } from './modules/subject/subject.module';
 import { CurriculumModule } from './modules/curriculum/curriculum.module';
 import { GroupModule } from './modules/group/group.module';
+import { DayScheduleModule } from './modules/day-schedule/day-schedule.module';
 
 @Module({
   imports: [
@@ -33,7 +34,7 @@ import { GroupModule } from './modules/group/group.module';
       }),
       inject: [ConfigService],
     }),
-    AuthModule, SettingsModule, StaffModule, RoleModule, AdminModule, MailModule, SubjectModule, CurriculumModule, GroupModule],
+    AuthModule, SettingsModule, StaffModule, RoleModule, AdminModule, MailModule, SubjectModule, CurriculumModule, GroupModule, DayScheduleModule],
   controllers: [AppController],
   providers: [AppService, MailService],
 })

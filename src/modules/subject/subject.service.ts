@@ -35,8 +35,8 @@ export class SubjectService {
     }
 
     /**
-   * Update subject
-   */
+    * Update subject
+    */
 
     async updateSubject(subject: SubjectDto): Promise<string> {
         try {
@@ -63,8 +63,8 @@ export class SubjectService {
     }
 
     /**
- * Delete subject.
- */
+     * Delete subject.
+     */
 
     async deleteSubject(id: string): Promise<DeleteSubjectResponse> {
         try {
@@ -79,7 +79,7 @@ export class SubjectService {
     }
 
     /**
-     * Get roles list
+     * Get subjects list
      */
 
     async getSubjectsList(listQuery: ListQueryDto): Promise<GetSubjectListResponse> {
