@@ -17,7 +17,7 @@ export class AdminEntity extends BaseEntity implements Admin {
     currentTokenId: string;
 
     @Column({
-        length: 20,
+        length: 50,
         unique: true,
     })
     public email: string;

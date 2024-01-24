@@ -27,7 +27,7 @@ export enum CreateAdminResponse {
 
 
 export enum UpdateAdminResponse {
-    Success = 'Administrator has been created.',
+    Success = 'Administrator has been updated.',
     StaffNotFound = 'Staff mamber not exists.',
     AdminNotFound = 'Administrator not exists.',
     NotFound = "NotFound"
