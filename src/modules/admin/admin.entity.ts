@@ -36,7 +36,7 @@ export class AdminEntity extends BaseEntity implements Admin {
     @JoinColumn()
     staff: StaffEntity;
 
-    @ManyToMany(() => GroupEntity, group => group.admins)
+    @ManyToMany(() => GroupEntity, group => group.admins, { eager: true })
     groups: GroupEntity[];
 
     constructor(admin?: Admin) {

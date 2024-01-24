@@ -1,4 +1,4 @@
-import { Controller, Inject, HttpCode, Body, Get, Post, Patch, UploadedFiles, UseInterceptors, Delete, Param, Res, Query } from '@nestjs/common';
+import { Controller, Inject, HttpCode, Body, Get, Post, Patch, UploadedFiles, UseInterceptors, Delete, Param, Res, Query, HttpException, HttpStatus } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiCreatedResponse, ApiConsumes, ApiOkResponse, ApiNotFoundResponse, ApiNoContentResponse } from '@nestjs/swagger';
 import { FileFieldsInterceptor } from "@nestjs/platform-express";
 import * as path from "path";
@@ -7,7 +7,8 @@ import { StaffService } from './staff.service';
 import { CreateStaffDto, StaffDto, StaffListDto, UpdateStaffDto } from './dto/staff.dto';
 import { AdminRole, GetOneStaffResponse, GetPaginatedListOfSelectOptions, GetPaginatedListOfStaff, MulterDiskUploadedFiles } from './../../../types';
 import { ListQueryDto, SelectOptionDto } from '../../dtos';
-import { Protected } from '../../decorators';
+import { Protected, Requester } from '../../decorators';
+import { AdminEntity } from '../admin/admin.entity';
 
 /**
  * Staff mamagment.
@@ -78,8 +79,14 @@ export class StaffController {
     async updateStaff(
         @Body() staff: UpdateStaffDto,
         @UploadedFiles() files: MulterDiskUploadedFiles,
+        @Requester() requester: AdminEntity
     ): Promise<string> {
-        return this.staffService.updateStaff(staff, files)
+        if (requester.staff.id === staff.id) {
+            return this.staffService.updateStaff(staff, files)
+        }
+        else {
+            throw new HttpException('Forbidden resource', HttpStatus.FORBIDDEN);
+        }
     }
 
     /**
@@ -118,8 +125,18 @@ export class StaffController {
         description: 'Staff member not found',
     })
     @Protected([AdminRole.SuperAdmin, AdminRole.GroupAdmin])
-    async getOneStaffMember(@Param('id') id: string,): Promise<GetOneStaffResponse> {
-        return await this.staffService.getOneStaffMember(id)
+    async getOneStaffMember(
+        @Param('id') id: string,
+        @Requester() requester: AdminEntity,
+    ): Promise<GetOneStaffResponse> {
+
+        if (requester.staff.id === id) {
+            return await this.staffService.getOneStaffMember(id)
+        }
+        else {
+            throw new HttpException('Forbidden resource', HttpStatus.FORBIDDEN);
+        }
+
 
     }
 
