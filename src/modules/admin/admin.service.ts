@@ -325,6 +325,7 @@ export class AdminService {
         const adminResponse = {
             id: id,
             role: role,
+            name: staff.name + ' ' + staff.surname,
             staff: {
                 id: staff.id,
                 name: staff.name,
