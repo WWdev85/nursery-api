@@ -1,4 +1,4 @@
-import { Controller, Inject, Post, HttpCode, Body, Patch, Delete, Get, Param, Query } from '@nestjs/common';
+import { Controller, Inject, Post, HttpCode, Body, Patch, Delete, Get, Param, Query, HttpException, HttpStatus } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { ApiTags, ApiOperation, ApiCreatedResponse, ApiOkResponse, ApiNotFoundResponse, ApiNoContentResponse } from '@nestjs/swagger';
 import { AdminDto, AdminListDto, AdminPayloadDto, CreateAdminDto, UpdateAdminDto } from './dto/admin.dto';
@@ -48,7 +48,7 @@ export class AdminController {
         description: 'Administrator has been updated',
     })
 
-    @Protected([AdminRole.SuperAdmin, AdminRole.GroupAdmin])
+    @Protected([AdminRole.SuperAdmin])
     async updateStaff(
         @Body() admin: UpdateAdminDto,
     ): Promise<string> {
@@ -162,12 +162,16 @@ export class AdminController {
     @ApiNotFoundResponse({
         description: 'Staff member not found',
     })
-    @Protected([AdminRole.SuperAdmin])
+    @Protected([AdminRole.SuperAdmin, AdminRole.GroupAdmin])
     async getOneAdmin(
         @Param('id') id: string,
         @Requester() admin: AdminEntity,
     ): Promise<GetOneAdminResponse> {
-        return await this.adminService.getOneAdmin(id)
+        if (admin.role === AdminRole.SuperAdmin || admin.id === id) {
+            return await this.adminService.getOneAdmin(id)
+        } else {
+            throw new HttpException('Forbidden resource', HttpStatus.FORBIDDEN);
+        }
     }
 
     /**

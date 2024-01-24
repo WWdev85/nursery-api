@@ -92,7 +92,7 @@ export class SubjectController {
         type: SubjectsListDto,
         description: 'Response interface: `GetSubjectListResponse`',
     })
-    @Protected([AdminRole.SuperAdmin, AdminRole.GroupAdmin])
+    @Protected([AdminRole.SuperAdmin])
     async getRolesList(
         @Query() query: ListQueryDto
     ): Promise<GetSubjectListResponse> {

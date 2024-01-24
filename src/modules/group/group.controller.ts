@@ -1,6 +1,6 @@
-import { Controller, Inject, Post, HttpCode, Body, Patch, Delete, Param, Query, Get, UseInterceptors, UploadedFiles, Res } from '@nestjs/common';
+import { Controller, Inject, Post, HttpCode, Body, Patch, Delete, Param, Query, Get, UseInterceptors, UploadedFiles, Res, HttpException, HttpStatus } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiNoContentResponse, ApiConsumes } from '@nestjs/swagger';
-import { Protected } from '../../decorators';
+import { Protected, Requester } from '../../decorators';
 
 import { GroupService } from './group.service';
 import { CreateGroupDto, GroupDto, GroupListDto, UpdateGroupDto } from './dto/group.dto';
@@ -9,6 +9,7 @@ import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { multerStorage, storageDir } from '../../utils';
 import * as path from 'path';
 import { ListQueryDto } from 'src/dtos';
+import { AdminEntity } from '../admin/admin.entity';
 
 
 @ApiTags('group')
@@ -50,7 +51,7 @@ export class GroupController {
     }
 
     /**
-* Update staff member.
+* Update group.
 */
 
     @Patch('update')
@@ -74,8 +75,15 @@ export class GroupController {
     async updateGroup(
         @Body() group: UpdateGroupDto,
         @UploadedFiles() files: MulterDiskUploadedFiles,
+        @Requester() requester: AdminEntity,
     ): Promise<string> {
-        return this.groupService.updateGroup(group, files)
+
+        if (requester.groups.find(g => g.id === group.id)) {
+            return this.groupService.updateGroup(group, files)
+        }
+        else {
+            throw new HttpException('Forbidden resource', HttpStatus.FORBIDDEN);
+        }
     }
 
     /**
@@ -114,8 +122,18 @@ export class GroupController {
         description: 'Staff member not found',
     })
     @Protected([AdminRole.SuperAdmin, AdminRole.GroupAdmin])
-    async getOneGroup(@Param('id') id: string,): Promise<GetOneGroupResponse> {
-        return await this.groupService.getOneGroup(id)
+    async getOneGroup(
+        @Param('id') id: string,
+        @Requester() requester: AdminEntity
+    )
+        : Promise<GetOneGroupResponse> {
+        if (requester.groups.find(group => group.id === id)) {
+            return await this.groupService.getOneGroup(id)
+        }
+        else {
+            throw new HttpException('Forbidden resource', HttpStatus.FORBIDDEN);
+        }
+
     }
 
     /**
@@ -151,9 +169,11 @@ export class GroupController {
         type: GroupListDto,
         description: 'Response interface: `GroupList`',
     })
-    @Protected([AdminRole.SuperAdmin])
-    async getAllGroups(@Query() query: ListQueryDto): Promise<GetPaginatedListOfGroups> {
-        return this.groupService.getAllGroups(query)
+    @Protected([AdminRole.SuperAdmin, AdminRole.GroupAdmin])
+    async getAllGroups(
+        @Query() query: ListQueryDto,
+        @Requester() requester: AdminEntity
+    ): Promise<GetPaginatedListOfGroups> {
+        return this.groupService.getAllGroups(query, requester)
     }
-
 }

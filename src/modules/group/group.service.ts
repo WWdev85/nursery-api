@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateGroupDto, UpdateGroupDto } from './dto/group.dto';
-import { CreateGroupResponse, DeleteGroupResponse, GetOneGroupResponse, GetPaginatedListOfGroups, Group, MulterDiskUploadedFiles, Order, UpdateGroupResponse } from '../../../types';
+import { AdminRole, CreateGroupResponse, DeleteGroupResponse, GetOneGroupResponse, GetPaginatedListOfGroups, Group, MulterDiskUploadedFiles, Order, UpdateGroupResponse } from '../../../types';
 import { GroupEntity } from './group.entity';
 import { StaffEntity } from '../staff/staff.entity';
 import { CurriculumEntity } from '../curriculum/cirriculum.entity';
@@ -9,6 +9,7 @@ import * as path from 'path';
 import { storageDir } from '../../utils';
 import { ListQueryDto } from 'src/dtos';
 import { AdminEntity } from '../admin/admin.entity';
+import { QueryBuilder } from 'typeorm';
 
 @Injectable()
 export class GroupService {
@@ -190,7 +191,7 @@ export class GroupService {
      * Get all staff members.
      */
 
-    async getAllGroups(listQuery: ListQueryDto): Promise<GetPaginatedListOfGroups> {
+    async getAllGroups(listQuery: ListQueryDto, requester: AdminEntity): Promise<GetPaginatedListOfGroups> {
         const { search, page, limit, orderBy, order } = listQuery
         try {
             const queryBuilder = GroupEntity.createQueryBuilder('group')
@@ -206,6 +207,10 @@ export class GroupService {
                     .orWhere('teacher.surname LIKE :search', { search: `%${search}%` })
                     .orWhere('teacher.name LIKE :search', { search: `%${search}%` })
                     .orWhere('curriculum.name LIKE :search', { search: `%${search}%` })
+            }
+            if (requester.role === AdminRole.GroupAdmin && requester.groups.length > 0) {
+                queryBuilder
+                    .andWhere('group.id IN (:...groupIds)', { groupIds: requester.groups });
             }
 
             if (orderBy && order) {
