@@ -150,6 +150,7 @@ export class GroupService {
                 .addSelect(['teacher.id', 'teacher.name', 'teacher.surname'])
                 .leftJoinAndSelect("group.curriculum", "curriculum")
                 .leftJoinAndSelect("group.admins", "admin")
+                .leftJoinAndSelect("admin.staff", "staff")
                 .where('group.id = :id', { id: id })
                 .getOne();
             return this.filter(response)
@@ -197,6 +198,7 @@ export class GroupService {
                 .addSelect(['teacher.id', 'teacher.name', 'teacher.surname'])
                 .leftJoinAndSelect("group.curriculum", "curriculum")
                 .leftJoinAndSelect("group.admins", "admin")
+                .leftJoinAndSelect("admin.staff", "staff")
 
             if (search) {
                 queryBuilder
@@ -321,7 +323,12 @@ export class GroupService {
             name: name,
             curriculum: curriculum,
             teacher: teacher,
-            admins: admins
+            admins: admins.map(admin => {
+                return {
+                    id: admin.id,
+                    name: admin.staff.name + ' ' + admin.staff.surname
+                }
+            })
         }
         return groupResponse
     }
