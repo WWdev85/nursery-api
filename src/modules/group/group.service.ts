@@ -210,7 +210,7 @@ export class GroupService {
             }
             if (requester.role === AdminRole.GroupAdmin && requester.groups.length > 0) {
                 queryBuilder
-                    .andWhere('group.id IN (:...groupIds)', { groupIds: requester.groups });
+                    .andWhere('admin.id = :adminId', { adminId: requester.id });
             }
 
             if (orderBy && order) {
