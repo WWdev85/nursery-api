@@ -127,7 +127,7 @@ export class GroupController {
         @Requester() requester: AdminEntity
     )
         : Promise<GetOneGroupResponse> {
-        if (requester.groups.find(group => group.id === id)) {
+        if (requester.role === AdminRole.SuperAdmin || requester.groups.find(group => group.id === id)) {
             return await this.groupService.getOneGroup(id)
         }
         else {
