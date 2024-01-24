@@ -36,6 +36,7 @@ export enum UpdateAdminResponse {
 export type GetOneAdminResponse = {
     id: string;
     role: AdminRole;
+    name: string;
     staff: GetOneStaffResponse
 } | null
 
