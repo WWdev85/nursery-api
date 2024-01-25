@@ -13,6 +13,10 @@ export class ScheduleEventDto implements ScheduleEvent {
     @ApiProperty()
     readonly endTime: string;
 
+    @IsString()
+    @ApiProperty()
+    readonly name: string;
+
     @IsBoolean()
     @ApiProperty()
     readonly isLesson: boolean;
