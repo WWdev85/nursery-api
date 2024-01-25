@@ -7,7 +7,7 @@ export interface ScheduleEvent {
 
 export interface CreateDaySchedule {
     name: string,
-    events: ScheduleEvent[]
+    events: ScheduleEvent[] | string
 }
 
 export interface DaySchedule extends CreateDaySchedule {
@@ -29,3 +29,5 @@ export enum DeleteDayScheduleResponse {
     Success = 'Day schedule has been deleted.',
     NotFound = 'Day schedule not found.',
 }
+
+export type GetOneDayScheduleResponse = DaySchedule | null

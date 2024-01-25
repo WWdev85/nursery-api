@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateDayScheduleDto, DayScheduleDto } from './dto/day-schedule.dto';
-import { CreateDayScheduleResponse, DaySchedule, DeleteDayScheduleResponse, UpdateDayScheduleResponse } from '../../../types';
+import { CreateDayScheduleResponse, DaySchedule, DeleteDayScheduleResponse, GetOneDayScheduleResponse, UpdateDayScheduleResponse } from '../../../types';
 import { DayScheduleEntity } from './day-schedule.entity';
 
 /**
@@ -34,7 +34,7 @@ export class DayScheduleService {
 
     async updateDaySchedule(daySchedule: DayScheduleDto): Promise<string> {
         try {
-            const currentDaySchedule = await this.GetOneDaySchedule(daySchedule.id)
+            const currentDaySchedule = await this.getOneDaySchedule(daySchedule.id)
             if (await this.findDayScheduleName(daySchedule.name, daySchedule.id)) {
                 throw new HttpException(UpdateDayScheduleResponse.Duplicated, HttpStatus.CONFLICT);
             }
@@ -52,7 +52,7 @@ export class DayScheduleService {
 
     async deleteDaySchedule(id: string): Promise<DeleteDayScheduleResponse> {
         try {
-            const daySchedule = await this.GetOneDaySchedule(id)
+            const daySchedule = await this.getOneDaySchedule(id)
             await DayScheduleEntity.delete(daySchedule.id)
             return DeleteDayScheduleResponse.Success
         } catch (error) {
@@ -64,11 +64,29 @@ export class DayScheduleService {
      * Get one day schedule
      */
 
-    async GetOneDaySchedule(id: string): Promise<DayScheduleEntity> {
+    async getOneDaySchedule(id: string): Promise<GetOneDayScheduleResponse> {
         try {
             const response = await DayScheduleEntity.createQueryBuilder('day-schedule')
                 .where('day-schedule.id = :id', { id: id })
                 .getOne();
+            if (response) {
+                return response
+            } else {
+                throw new HttpException(UpdateDayScheduleResponse.NotFound, HttpStatus.NOT_FOUND);
+            }
+        } catch (error) {
+            throw error
+        }
+    }
+
+    /**
+ * Get all day schedules
+ */
+
+    async getAllDaySchedules(): Promise<GetOneDayScheduleResponse[]> {
+        try {
+            const response = await DayScheduleEntity.createQueryBuilder('day-schedule')
+                .getMany();
             if (response) {
                 return response
             } else {
@@ -99,6 +117,4 @@ export class DayScheduleService {
             throw error
         }
     }
-
-
 }
