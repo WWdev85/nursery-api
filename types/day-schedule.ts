@@ -2,6 +2,7 @@
 export interface ScheduleEvent {
     startTime: string;
     endTime: string;
+    name: string;
     isLesson: boolean;
 }
 
