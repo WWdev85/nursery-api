@@ -12,3 +12,4 @@ export * from './subject';
 export * from './select-option';
 export * from './curriculum';
 export * from './group';
+export * from './day-schedule';

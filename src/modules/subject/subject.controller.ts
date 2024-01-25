@@ -39,8 +39,8 @@ export class SubjectController {
     }
 
     /**
-  * Update subject.
-  */
+    * Update subject.
+    */
 
     @Patch('update')
     @ApiOperation({
@@ -54,7 +54,7 @@ export class SubjectController {
         description: UpdateSubjectResponse.Success,
     })
     @Protected([AdminRole.SuperAdmin])
-    async updateRole(
+    async updateSubject(
         @Body() subject: SubjectDto
     ): Promise<string> {
         return await this.subjectService.updateSubject(subject)

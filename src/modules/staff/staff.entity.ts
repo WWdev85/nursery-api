@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, JoinColumn, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Staff } from '../../../types'
 import { RoleEntity } from "../role/role.entity";
 import { AdminEntity } from "../admin/admin.entity";
