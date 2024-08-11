@@ -22,6 +22,7 @@ export class StaffService {
         try {
             const photo = files?.photo?.[0] ?? null
             const newStaff = new StaffEntity(staff as Staff)
+            console.log('test2')
             if (await this.findEmail(staff.email)) {
                 throw new HttpException(CreateStaffResponse.Duplicated, HttpStatus.CONFLICT);
             }
