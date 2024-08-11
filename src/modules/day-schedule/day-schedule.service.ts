@@ -16,7 +16,7 @@ export class DayScheduleService {
 
     async addDaySchedule(daySchedule: CreateDayScheduleDto): Promise<string> {
         try {
-
+            console.log('test')
             if (await this.findDayScheduleName(daySchedule.name)) {
                 throw new HttpException(CreateDayScheduleResponse.Duplicated, HttpStatus.CONFLICT);
             }
